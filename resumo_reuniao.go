@@ -6,15 +6,30 @@ type ReuniaoComResumo struct {
 }
 
 func (app *App) resumoDaReuniao(reuniao Reuniao) ResumoChecklist {
-	err := app.garantirItensChecklist(reuniao)
+	var resumo ResumoChecklist
+
+	err := app.DB.QueryRow(`
+		SELECT
+			COUNT(*),
+			SUM(CASE WHEN status = 'Pendente' THEN 1 ELSE 0 END),
+			SUM(CASE WHEN status = 'Recebido' THEN 1 ELSE 0 END),
+			SUM(CASE WHEN status = 'Não se aplica' THEN 1 ELSE 0 END)
+		FROM checklist_itens
+		WHERE reuniao_id = ?
+	`, reuniao.ID).Scan(
+		&resumo.Total,
+		&resumo.Pendentes,
+		&resumo.Recebidos,
+		&resumo.NaoSeAplica,
+	)
+
 	if err != nil {
 		return ResumoChecklist{}
 	}
 
-	itens, err := app.listarItensChecklist(reuniao.ID)
-	if err != nil {
-		return ResumoChecklist{}
+	if resumo.Total > 0 {
+		resumo.PercentualConcluido = ((resumo.Recebidos + resumo.NaoSeAplica) * 100) / resumo.Total
 	}
 
-	return calcularResumoChecklist(itens)
+	return resumo
 }
