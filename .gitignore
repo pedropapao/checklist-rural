@@ -1,0 +1,29 @@
+# Banco de dados local
+*.db
+*.sqlite
+*.sqlite3
+
+# Pastas de dados locais
+ChecklistRural/
+Documentos/
+exports/
+backups/
+
+# Arquivos gerados
+*.txt
+*.log
+
+# Binários compilados
+checklist-rural
+checklist-rural.exe
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Backups de código locais
+*.bak
+*.backup
+*_backup.*
