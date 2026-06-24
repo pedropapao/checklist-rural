@@ -67,6 +67,7 @@ func main() {
 
 	http.HandleFunc("/whatsapp", app.telaWhatsApp)
 	http.HandleFunc("/whatsapp-pendencias", app.telaWhatsAppPendencias)
+	http.HandleFunc("/abrir-whatsapp-pendencias", app.abrirWhatsAppPendencias)
 
 	http.HandleFunc("/exportar-checklist-txt", app.exportarChecklistTXT)
 	http.HandleFunc("/exportar-checklist-controle-txt", app.exportarChecklistControleTXT)
