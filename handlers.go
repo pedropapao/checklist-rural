@@ -248,6 +248,8 @@ func (app *App) buscarReuniaoPorID(id int) (Reuniao, error) {
 		&reuniao.Banco,
 		&reuniao.TipoProjeto,
 		&reuniao.Atividade,
+		&reuniao.RendaAnual,
+		&reuniao.ClassificacaoProdutor,
 		&reuniao.CadastroBanco,
 		&reuniao.FinanciamentoAtivo,
 		&reuniao.RestricaoCadastral,

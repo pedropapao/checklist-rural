@@ -39,6 +39,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	err = app.corrigirClassificacaoReunioesAntigas()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = app.criarTabelaItensChecklist()
 	if err != nil {
 		log.Fatal(err)
