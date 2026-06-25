@@ -8,14 +8,18 @@ type App struct {
 }
 
 type Reuniao struct {
-	ID          int
-	Produtor    string
-	Telefone    string
-	Municipio   string
-	UF          string
+	ID        int
+	Produtor  string
+	Telefone  string
+	Municipio string
+	UF        string
+
 	Banco       string
 	TipoProjeto string
 	Atividade   string
+
+	RendaAnual            float64
+	ClassificacaoProdutor string
 
 	CadastroBanco      string
 	FinanciamentoAtivo string

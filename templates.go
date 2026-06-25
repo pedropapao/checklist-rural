@@ -250,24 +250,94 @@ const novaReuniaoHTML = `
 		<option value="Outro">Outro</option>
 	</select>
 
-	<h3>Triagem rápida</h3>
+	<h3>Classificação do produtor</h3>
 
-	<div class="grid">
-		<label class="check"><input type="checkbox" name="cadastro_banco" value="sim"> Produtor já tem cadastro no banco</label>
-		<label class="check"><input type="checkbox" name="financiamento_ativo" value="sim"> Possui financiamento rural ativo</label>
-		<label class="check"><input type="checkbox" name="restricao_cadastral" value="sim"> Possui restrição cadastral conhecida</label>
-		<label class="check"><input type="checkbox" name="imovel_proprio" value="sim"> Imóvel próprio</label>
-		<label class="check"><input type="checkbox" name="imovel_arrendado" value="sim"> Imóvel arrendado/parceria/comodato</label>
-		<label class="check"><input type="checkbox" name="tem_car" value="sim"> Possui CAR</label>
-		<label class="check"><input type="checkbox" name="usa_agua" value="sim"> Usa água/irrigação/pecuária intensiva</label>
-		<label class="check"><input type="checkbox" name="tem_pecuaria" value="sim"> Projeto envolve pecuária</label>
-		<label class="check"><input type="checkbox" name="tem_investimento" value="sim"> Projeto envolve investimento</label>
-		<label class="check"><input type="checkbox" name="tem_obra" value="sim"> Possui obra/construção/reforma</label>
-		<label class="check"><input type="checkbox" name="tem_supressao" value="sim"> Haverá supressão vegetal/abertura de área</label>
-		<label class="check"><input type="checkbox" name="precisa_zarc" value="sim"> Precisa validar ZARC</label>
-	</div>
+	<label>Receita Bruta Agropecuária Anual - RBA</label>
+	<input type="text" name="renda_anual" value="{{printf "%.2f" .Reuniao.RendaAnual}}" placeholder="Ex: 500000,00">
 
-	<label>Observações iniciais</label>
+	<p class="pequeno">
+		Informe a renda bruta agropecuária anual aproximada para classificar o produtor.
+	</p>
+
+	<h3>Triagem guiada</h3>
+
+<div class="card">
+	<h4>1. Situação cadastral do produtor</h4>
+
+	<label class="check">
+		<input type="checkbox" name="cadastro_banco" value="sim">
+		O produtor já tem cadastro no banco pretendido?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="financiamento_ativo" value="sim">
+		O produtor possui financiamento rural ativo?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="restricao_cadastral" value="sim">
+		O produtor informou alguma restrição cadastral conhecida?
+	</label>
+</div>
+
+<div class="card">
+	<h4>2. Situação da propriedade</h4>
+
+	<label class="check">
+		<input type="checkbox" name="imovel_proprio" value="sim">
+		A área do projeto é imóvel próprio?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="imovel_arrendado" value="sim">
+		A área é arrendada, parceria ou comodato?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_car" value="sim">
+		A propriedade possui CAR?
+	</label>
+</div>
+
+<div class="card">
+	<h4>3. Situação ambiental e uso da área</h4>
+
+	<label class="check">
+		<input type="checkbox" name="usa_agua" value="sim">
+		O projeto usa água, irrigação, poço, represa ou pecuária intensiva?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_supressao" value="sim">
+		Haverá supressão vegetal, abertura de área ou limpeza de vegetação nativa?
+	</label>
+</div>
+
+<div class="card">
+	<h4>4. Tipo do projeto pretendido</h4>
+
+	<label class="check">
+		<input type="checkbox" name="tem_pecuaria" value="sim">
+		O projeto envolve pecuária?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_investimento" value="sim">
+		O projeto envolve investimento?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_obra" value="sim">
+		O projeto possui obra, construção, reforma ou benfeitoria?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="precisa_zarc" value="sim">
+		O projeto precisa validar ZARC?
+	</label>
+</div>
+
+<label>Observações iniciais</label>
 	<textarea name="observacoes"></textarea>
 
 	<br><br>
@@ -341,7 +411,8 @@ const reunioesHTML = `
 		<td>
 			Banco: {{.Banco}}<br>
 			Tipo: {{.TipoProjeto}}<br>
-			Atividade: {{.Atividade}}
+			Atividade: {{.Atividade}}<br>
+			Classificação: {{.ClassificacaoProdutor}}
 		</td>
 		<td>
 			Cadastro banco: {{.CadastroBanco}}<br>
@@ -433,24 +504,94 @@ const editarReuniaoHTML = `
 		<option value="Outro" {{if eq .Reuniao.Atividade "Outro"}}selected{{end}}>Outro</option>
 	</select>
 
-	<h3>Triagem rápida</h3>
+	<h3>Classificação do produtor</h3>
 
-	<div class="grid">
-		<label class="check"><input type="checkbox" name="cadastro_banco" value="sim" {{if eq .Reuniao.CadastroBanco "sim"}}checked{{end}}> Produtor já tem cadastro no banco</label>
-		<label class="check"><input type="checkbox" name="financiamento_ativo" value="sim" {{if eq .Reuniao.FinanciamentoAtivo "sim"}}checked{{end}}> Possui financiamento rural ativo</label>
-		<label class="check"><input type="checkbox" name="restricao_cadastral" value="sim" {{if eq .Reuniao.RestricaoCadastral "sim"}}checked{{end}}> Possui restrição cadastral conhecida</label>
-		<label class="check"><input type="checkbox" name="imovel_proprio" value="sim" {{if eq .Reuniao.ImovelProprio "sim"}}checked{{end}}> Imóvel próprio</label>
-		<label class="check"><input type="checkbox" name="imovel_arrendado" value="sim" {{if eq .Reuniao.ImovelArrendado "sim"}}checked{{end}}> Imóvel arrendado/parceria/comodato</label>
-		<label class="check"><input type="checkbox" name="tem_car" value="sim" {{if eq .Reuniao.TemCAR "sim"}}checked{{end}}> Possui CAR</label>
-		<label class="check"><input type="checkbox" name="usa_agua" value="sim" {{if eq .Reuniao.UsaAgua "sim"}}checked{{end}}> Usa água/irrigação/pecuária intensiva</label>
-		<label class="check"><input type="checkbox" name="tem_pecuaria" value="sim" {{if eq .Reuniao.TemPecuaria "sim"}}checked{{end}}> Projeto envolve pecuária</label>
-		<label class="check"><input type="checkbox" name="tem_investimento" value="sim" {{if eq .Reuniao.TemInvestimento "sim"}}checked{{end}}> Projeto envolve investimento</label>
-		<label class="check"><input type="checkbox" name="tem_obra" value="sim" {{if eq .Reuniao.TemObra "sim"}}checked{{end}}> Possui obra/construção/reforma</label>
-		<label class="check"><input type="checkbox" name="tem_supressao" value="sim" {{if eq .Reuniao.TemSupressao "sim"}}checked{{end}}> Haverá supressão vegetal/abertura de área</label>
-		<label class="check"><input type="checkbox" name="precisa_zarc" value="sim" {{if eq .Reuniao.PrecisaZARC "sim"}}checked{{end}}> Precisa validar ZARC</label>
-	</div>
+	<label>Receita Bruta Agropecuária Anual - RBA</label>
+	<input type="text" name="renda_anual" value="{{printf "%.2f" .Reuniao.RendaAnual}}" placeholder="Ex: 500000,00">
 
-	<label>Observações iniciais</label>
+	<p class="pequeno">
+		Informe a renda bruta agropecuária anual aproximada para classificar o produtor.
+	</p>
+
+	<h3>Triagem guiada</h3>
+
+<div class="card">
+	<h4>1. Situação cadastral do produtor</h4>
+
+	<label class="check">
+		<input type="checkbox" name="cadastro_banco" value="sim" {{if eq .Reuniao.CadastroBanco "sim"}}checked{{end}}>
+		O produtor já tem cadastro no banco pretendido?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="financiamento_ativo" value="sim" {{if eq .Reuniao.FinanciamentoAtivo "sim"}}checked{{end}}>
+		O produtor possui financiamento rural ativo?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="restricao_cadastral" value="sim" {{if eq .Reuniao.RestricaoCadastral "sim"}}checked{{end}}>
+		O produtor informou alguma restrição cadastral conhecida?
+	</label>
+</div>
+
+<div class="card">
+	<h4>2. Situação da propriedade</h4>
+
+	<label class="check">
+		<input type="checkbox" name="imovel_proprio" value="sim" {{if eq .Reuniao.ImovelProprio "sim"}}checked{{end}}>
+		A área do projeto é imóvel próprio?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="imovel_arrendado" value="sim" {{if eq .Reuniao.ImovelArrendado "sim"}}checked{{end}}>
+		A área é arrendada, parceria ou comodato?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_car" value="sim" {{if eq .Reuniao.TemCAR "sim"}}checked{{end}}>
+		A propriedade possui CAR?
+	</label>
+</div>
+
+<div class="card">
+	<h4>3. Situação ambiental e uso da área</h4>
+
+	<label class="check">
+		<input type="checkbox" name="usa_agua" value="sim" {{if eq .Reuniao.UsaAgua "sim"}}checked{{end}}>
+		O projeto usa água, irrigação, poço, represa ou pecuária intensiva?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_supressao" value="sim" {{if eq .Reuniao.TemSupressao "sim"}}checked{{end}}>
+		Haverá supressão vegetal, abertura de área ou limpeza de vegetação nativa?
+	</label>
+</div>
+
+<div class="card">
+	<h4>4. Tipo do projeto pretendido</h4>
+
+	<label class="check">
+		<input type="checkbox" name="tem_pecuaria" value="sim" {{if eq .Reuniao.TemPecuaria "sim"}}checked{{end}}>
+		O projeto envolve pecuária?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_investimento" value="sim" {{if eq .Reuniao.TemInvestimento "sim"}}checked{{end}}>
+		O projeto envolve investimento?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_obra" value="sim" {{if eq .Reuniao.TemObra "sim"}}checked{{end}}>
+		O projeto possui obra, construção, reforma ou benfeitoria?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="precisa_zarc" value="sim" {{if eq .Reuniao.PrecisaZARC "sim"}}checked{{end}}>
+		O projeto precisa validar ZARC?
+	</label>
+</div>
+
+<label>Observações iniciais</label>
 	<textarea name="observacoes">{{.Reuniao.Observacoes}}</textarea>
 
 	<br><br>
@@ -507,6 +648,8 @@ const detalhesHTML = `
 	<p><strong>Banco:</strong> {{.Reuniao.Banco}}</p>
 	<p><strong>Tipo de projeto:</strong> {{.Reuniao.TipoProjeto}}</p>
 	<p><strong>Atividade:</strong> {{.Reuniao.Atividade}}</p>
+	<p><strong>Renda anual:</strong> R$ {{printf "%.2f" .Reuniao.RendaAnual}}</p>
+	<p><strong>Classificação:</strong> {{.Reuniao.ClassificacaoProdutor}}</p>
 </div>
 
 <div class="card">
@@ -541,23 +684,94 @@ const detalhesHTML = `
 </div>
 
 <div class="card">
-	<h3>Triagem rápida</h3>
+	<h3>Triagem guiada</h3>
 
-	<table>
-		<tr><th>Item</th><th>Resposta</th></tr>
-		<tr><td>Produtor já tem cadastro no banco</td><td>{{.Reuniao.CadastroBanco}}</td></tr>
-		<tr><td>Possui financiamento rural ativo</td><td>{{.Reuniao.FinanciamentoAtivo}}</td></tr>
-		<tr><td>Possui restrição cadastral conhecida</td><td>{{.Reuniao.RestricaoCadastral}}</td></tr>
-		<tr><td>Imóvel próprio</td><td>{{.Reuniao.ImovelProprio}}</td></tr>
-		<tr><td>Imóvel arrendado/parceria/comodato</td><td>{{.Reuniao.ImovelArrendado}}</td></tr>
-		<tr><td>Possui CAR</td><td>{{.Reuniao.TemCAR}}</td></tr>
-		<tr><td>Usa água/irrigação/pecuária intensiva</td><td>{{.Reuniao.UsaAgua}}</td></tr>
-		<tr><td>Projeto envolve pecuária</td><td>{{.Reuniao.TemPecuaria}}</td></tr>
-		<tr><td>Projeto envolve investimento</td><td>{{.Reuniao.TemInvestimento}}</td></tr>
-		<tr><td>Possui obra/construção/reforma</td><td>{{.Reuniao.TemObra}}</td></tr>
-		<tr><td>Haverá supressão vegetal/abertura de área</td><td>{{.Reuniao.TemSupressao}}</td></tr>
-		<tr><td>Precisa validar ZARC</td><td>{{.Reuniao.PrecisaZARC}}</td></tr>
-	</table>
+<div class="card">
+	<h4>1. Situação cadastral do produtor</h4>
+
+	<label class="check">
+		<input type="checkbox" name="cadastro_banco" value="sim">
+		O produtor já tem cadastro no banco pretendido?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="financiamento_ativo" value="sim">
+		O produtor possui financiamento rural ativo?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="restricao_cadastral" value="sim">
+		O produtor informou alguma restrição cadastral conhecida?
+	</label>
+</div>
+
+<div class="card">
+	<h4>2. Classificação pela renda rural</h4>
+
+	<label>Receita Bruta Agropecuária Anual - RBA</label>
+	<input type="text" name="renda_anual" placeholder="Ex: 500000,00">
+
+	<p class="pequeno">
+		Informe a renda bruta agropecuária anual aproximada do produtor.
+		O sistema usará esse valor para classificar como pequeno, médio ou grande produtor.
+	</p>
+</div>
+
+<div class="card">
+	<h4>3. Situação da propriedade</h4>
+
+	<label class="check">
+		<input type="checkbox" name="imovel_proprio" value="sim">
+		A área do projeto é imóvel próprio?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="imovel_arrendado" value="sim">
+		A área é arrendada, parceria ou comodato?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_car" value="sim">
+		A propriedade possui CAR?
+	</label>
+</div>
+
+<div class="card">
+	<h4>4. Situação ambiental e uso da área</h4>
+
+	<label class="check">
+		<input type="checkbox" name="usa_agua" value="sim">
+		O projeto usa água, irrigação, poço, represa ou pecuária intensiva?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_supressao" value="sim">
+		Haverá supressão vegetal, abertura de área ou limpeza de vegetação nativa?
+	</label>
+</div>
+
+<div class="card">
+	<h4>5. Tipo do projeto pretendido</h4>
+
+	<label class="check">
+		<input type="checkbox" name="tem_pecuaria" value="sim">
+		O projeto envolve pecuária?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_investimento" value="sim">
+		O projeto envolve investimento?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="tem_obra" value="sim">
+		O projeto possui obra, construção, reforma ou benfeitoria?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" name="precisa_zarc" value="sim">
+		O projeto precisa validar ZARC?
+	</label>
 </div>
 
 <div class="card">

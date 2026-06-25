@@ -50,6 +50,16 @@ func (app *App) salvarReuniao(w http.ResponseWriter, r *http.Request) {
 	tipoProjeto := r.FormValue("tipo_projeto")
 	atividade := r.FormValue("atividade")
 	observacoes := r.FormValue("observacoes")
+	rendaAnualTexto := r.FormValue("renda_anual")
+
+	rendaAnual, err := normalizarValorMonetario(rendaAnualTexto)
+	if err != nil {
+		http.Error(w, "Renda anual inválida", http.StatusBadRequest)
+		return
+	}
+
+	classificacaoProdutor := classificarProdutorPorRBA(rendaAnual)
+
 	criadoEm := time.Now().Format("02/01/2006 15:04")
 
 	if produtor == "" {
@@ -61,12 +71,13 @@ func (app *App) salvarReuniao(w http.ResponseWriter, r *http.Request) {
 		INSERT INTO reunioes 
 		(
 			produtor, telefone, municipio, uf, banco, tipo_projeto, atividade,
+			renda_anual, classificacao_produtor,
 			cadastro_banco, financiamento_ativo, restricao_cadastral,
 			imovel_proprio, imovel_arrendado, tem_car, usa_agua,
 			tem_pecuaria, tem_investimento, tem_obra, tem_supressao, precisa_zarc,
 			observacoes, criado_em
 		)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`,
 		produtor,
 		telefone,
@@ -75,6 +86,8 @@ func (app *App) salvarReuniao(w http.ResponseWriter, r *http.Request) {
 		banco,
 		tipoProjeto,
 		atividade,
+		rendaAnual,
+		classificacaoProdutor,
 		checkValor(r, "cadastro_banco"),
 		checkValor(r, "financiamento_ativo"),
 		checkValor(r, "restricao_cadastral"),
@@ -110,6 +123,8 @@ func (app *App) listarReunioes(w http.ResponseWriter, r *http.Request) {
 			COALESCE(banco, ''),
 			COALESCE(tipo_projeto, ''),
 			COALESCE(atividade, ''),
+			COALESCE(renda_anual, 0),
+			COALESCE(classificacao_produtor, ''),
 			COALESCE(cadastro_banco, 'nao'),
 			COALESCE(financiamento_ativo, 'nao'),
 			COALESCE(restricao_cadastral, 'nao'),
@@ -147,6 +162,8 @@ func (app *App) listarReunioes(w http.ResponseWriter, r *http.Request) {
 			&reuniao.Banco,
 			&reuniao.TipoProjeto,
 			&reuniao.Atividade,
+			&reuniao.RendaAnual,
+			&reuniao.ClassificacaoProdutor,
 			&reuniao.CadastroBanco,
 			&reuniao.FinanciamentoAtivo,
 			&reuniao.RestricaoCadastral,
@@ -204,6 +221,8 @@ func (app *App) buscarReuniaoPorID(id int) (Reuniao, error) {
 			COALESCE(banco, ''),
 			COALESCE(tipo_projeto, ''),
 			COALESCE(atividade, ''),
+			COALESCE(renda_anual, 0),
+			COALESCE(classificacao_produtor, ''),
 			COALESCE(cadastro_banco, 'nao'),
 			COALESCE(financiamento_ativo, 'nao'),
 			COALESCE(restricao_cadastral, 'nao'),
@@ -297,6 +316,15 @@ func (app *App) atualizarReuniao(w http.ResponseWriter, r *http.Request) {
 	tipoProjeto := r.FormValue("tipo_projeto")
 	atividade := r.FormValue("atividade")
 	observacoes := r.FormValue("observacoes")
+	rendaAnualTexto := r.FormValue("renda_anual")
+
+	rendaAnual, err := normalizarValorMonetario(rendaAnualTexto)
+	if err != nil {
+		http.Error(w, "Renda anual inválida", http.StatusBadRequest)
+		return
+	}
+
+	classificacaoProdutor := classificarProdutorPorRBA(rendaAnual)
 
 	if produtor == "" {
 		http.Error(w, "Informe o nome do produtor", http.StatusBadRequest)
@@ -312,6 +340,8 @@ func (app *App) atualizarReuniao(w http.ResponseWriter, r *http.Request) {
 			banco = ?,
 			tipo_projeto = ?,
 			atividade = ?,
+			renda_anual = ?,
+			classificacao_produtor = ?,
 			cadastro_banco = ?,
 			financiamento_ativo = ?,
 			restricao_cadastral = ?,
@@ -334,6 +364,8 @@ func (app *App) atualizarReuniao(w http.ResponseWriter, r *http.Request) {
 		banco,
 		tipoProjeto,
 		atividade,
+		rendaAnual,
+		classificacaoProdutor,
 		checkValor(r, "cadastro_banco"),
 		checkValor(r, "financiamento_ativo"),
 		checkValor(r, "restricao_cadastral"),
