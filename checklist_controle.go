@@ -133,6 +133,7 @@ func (app *App) telaChecklistControle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resumo := calcularResumoChecklist(itens)
+	grupos := agruparItensChecklistParaTela(itens)
 
 	tpl := template.Must(template.New("checklistControle").Parse(htmlBase(checklistControleHTML)))
 
@@ -140,6 +141,7 @@ func (app *App) telaChecklistControle(w http.ResponseWriter, r *http.Request) {
 		"Titulo":  "Controle do checklist",
 		"Reuniao": reuniao,
 		"Itens":   itens,
+		"Grupos":  grupos,
 		"Resumo":  resumo,
 	}
 
