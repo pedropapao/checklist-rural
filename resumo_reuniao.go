@@ -11,9 +11,9 @@ func (app *App) resumoDaReuniao(reuniao Reuniao) ResumoChecklist {
 	err := app.DB.QueryRow(`
 		SELECT
 			COUNT(*),
-			SUM(CASE WHEN status = 'Pendente' THEN 1 ELSE 0 END),
-			SUM(CASE WHEN status = 'Recebido' THEN 1 ELSE 0 END),
-			SUM(CASE WHEN status = 'Não se aplica' THEN 1 ELSE 0 END)
+			COALESCE(SUM(CASE WHEN status = 'Pendente' THEN 1 ELSE 0 END), 0),
+			COALESCE(SUM(CASE WHEN status = 'Recebido' THEN 1 ELSE 0 END), 0),
+			COALESCE(SUM(CASE WHEN status = 'Não se aplica' THEN 1 ELSE 0 END), 0)
 		FROM checklist_itens
 		WHERE reuniao_id = ?
 	`, reuniao.ID).Scan(
