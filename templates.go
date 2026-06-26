@@ -690,17 +690,17 @@ const detalhesHTML = `
 	<h4>1. Situação cadastral do produtor</h4>
 
 	<label class="check">
-		<input type="checkbox" name="cadastro_banco" value="sim">
+		<input type="checkbox" name="cadastro_banco" value="sim" disabled {{if eq .Reuniao.CadastroBanco "sim"}}checked{{end}}>
 		O produtor já tem cadastro no banco pretendido?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="financiamento_ativo" value="sim">
+		<input type="checkbox" name="financiamento_ativo" value="sim" disabled {{if eq .Reuniao.FinanciamentoAtivo "sim"}}checked{{end}}>
 		O produtor possui financiamento rural ativo?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="restricao_cadastral" value="sim">
+		<input type="checkbox" name="restricao_cadastral" value="sim" disabled {{if eq .Reuniao.RestricaoCadastral "sim"}}checked{{end}}>
 		O produtor informou alguma restrição cadastral conhecida?
 	</label>
 </div>
@@ -721,17 +721,17 @@ const detalhesHTML = `
 	<h4>3. Situação da propriedade</h4>
 
 	<label class="check">
-		<input type="checkbox" name="imovel_proprio" value="sim">
+		<input type="checkbox" name="imovel_proprio" value="sim" disabled {{if eq .Reuniao.ImovelProprio "sim"}}checked{{end}}>
 		A área do projeto é imóvel próprio?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="imovel_arrendado" value="sim">
+		<input type="checkbox" name="imovel_arrendado" value="sim" disabled {{if eq .Reuniao.ImovelArrendado "sim"}}checked{{end}}>
 		A área é arrendada, parceria ou comodato?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_car" value="sim">
+		<input type="checkbox" name="tem_car" value="sim" disabled {{if eq .Reuniao.TemCAR "sim"}}checked{{end}}>
 		A propriedade possui CAR?
 	</label>
 </div>
@@ -740,12 +740,12 @@ const detalhesHTML = `
 	<h4>4. Situação ambiental e uso da área</h4>
 
 	<label class="check">
-		<input type="checkbox" name="usa_agua" value="sim">
+		<input type="checkbox" name="usa_agua" value="sim" disabled {{if eq .Reuniao.UsaAgua "sim"}}checked{{end}}>
 		O projeto usa água, irrigação, poço, represa ou pecuária intensiva?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_supressao" value="sim">
+		<input type="checkbox" name="tem_supressao" value="sim" disabled {{if eq .Reuniao.TemSupressao "sim"}}checked{{end}}>
 		Haverá supressão vegetal, abertura de área ou limpeza de vegetação nativa?
 	</label>
 </div>
@@ -754,28 +754,29 @@ const detalhesHTML = `
 	<h4>5. Tipo do projeto pretendido</h4>
 
 	<label class="check">
-		<input type="checkbox" name="tem_pecuaria" value="sim">
+		<input type="checkbox" name="tem_pecuaria" value="sim" disabled {{if eq .Reuniao.TemPecuaria "sim"}}checked{{end}}>
 		O projeto envolve pecuária?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_investimento" value="sim">
+		<input type="checkbox" name="tem_investimento" value="sim" disabled {{if eq .Reuniao.TemInvestimento "sim"}}checked{{end}}>
 		O projeto envolve investimento?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_obra" value="sim">
+		<input type="checkbox" name="tem_obra" value="sim" disabled {{if eq .Reuniao.TemObra "sim"}}checked{{end}}>
 		O projeto possui obra, construção, reforma ou benfeitoria?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="precisa_zarc" value="sim">
+		<input type="checkbox" name="precisa_zarc" value="sim" disabled {{if eq .Reuniao.PrecisaZARC "sim"}}checked{{end}}>
 		O projeto precisa validar ZARC?
 	</label>
 </div>
 
 <div class="card">
-	<h3>Observações da reunião</h3>
+	
+<h3>Observações da reunião</h3>
 	<p>{{.Reuniao.Observacoes}}</p>
 </div>
 `

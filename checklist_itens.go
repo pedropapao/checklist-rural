@@ -13,6 +13,7 @@ type ItemChecklist struct {
 	Item         string
 	Status       string
 	Observacao   string
+	Explicacao   string
 	CriadoEm     string
 	AtualizadoEm string
 }

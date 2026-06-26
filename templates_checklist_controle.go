@@ -4,6 +4,97 @@ const checklistControleHTML = `
 <h2>Controle do checklist</h2>
 
 <style>
+
+	.legenda-status {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin: 12px 0;
+	}
+
+	.legenda-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		border: 1px solid #ddd;
+		background: #fff;
+		font-size: 0.9em;
+	}
+
+	.bolinha-status {
+		width: 12px;
+		height: 12px;
+		border-radius: 999px;
+		display: inline-block;
+	}
+
+	.bolinha-pendente {
+		background: #f59e0b;
+	}
+
+	.bolinha-recebido {
+		background: #16a34a;
+	}
+
+	.bolinha-nao-aplica {
+		background: #6b7280;
+	}
+
+	.item-checklist[data-status="Pendente"] {
+		border-left: 7px solid #f59e0b;
+		background: #fffaf0;
+	}
+
+	.item-checklist[data-status="Recebido"] {
+		border-left: 7px solid #16a34a;
+		background: #f0fdf4;
+	}
+
+	.item-checklist[data-status="Não se aplica"] {
+		border-left: 7px solid #6b7280;
+		background: #f9fafb;
+		opacity: 0.85;
+	}
+
+	.item-checklist[data-status="Recebido"] .item-titulo::before {
+		content: "✓ ";
+		color: #16a34a;
+		font-weight: bold;
+	}
+
+	.item-checklist[data-status="Pendente"] .item-titulo::before {
+		content: "! ";
+		color: #f59e0b;
+		font-weight: bold;
+	}
+
+	.item-checklist[data-status="Não se aplica"] .item-titulo::before {
+		content: "– ";
+		color: #6b7280;
+		font-weight: bold;
+	}
+
+	.item-checklist[data-status="Pendente"] .status-atual {
+		background: #fef3c7;
+		border-color: #f59e0b;
+		color: #92400e;
+	}
+
+	.item-checklist[data-status="Recebido"] .status-atual {
+		background: #dcfce7;
+		border-color: #16a34a;
+		color: #166534;
+	}
+
+	.item-checklist[data-status="Não se aplica"] .status-atual {
+		background: #e5e7eb;
+		border-color: #6b7280;
+		color: #374151;
+	}
+
+
 	.painel-checklist {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -107,6 +198,43 @@ const checklistControleHTML = `
 		line-height: 1.35;
 	}
 
+	.botao-ajuda {
+		margin-left: 8px;
+		padding: 3px 8px;
+		border: 1px solid #999;
+		border-radius: 999px;
+		background: #f7f7f7;
+		cursor: pointer;
+		font-size: 0.85em;
+	}
+
+	.modal-explicacao {
+		display: none;
+		position: fixed;
+		z-index: 9999;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.45);
+	}
+
+	.modal-conteudo {
+		background: #fff;
+		margin: 8% auto;
+		padding: 20px;
+		border-radius: 14px;
+		max-width: 600px;
+		box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+	}
+
+	.modal-fechar {
+		float: right;
+		font-size: 24px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
 	.status-atual {
 		white-space: nowrap;
 		font-size: 0.85em;
@@ -145,7 +273,44 @@ const checklistControleHTML = `
 			display: block;
 		}
 
-		.status-atual {
+		.botao-ajuda {
+		margin-left: 8px;
+		padding: 3px 8px;
+		border: 1px solid #999;
+		border-radius: 999px;
+		background: #f7f7f7;
+		cursor: pointer;
+		font-size: 0.85em;
+	}
+
+	.modal-explicacao {
+		display: none;
+		position: fixed;
+		z-index: 9999;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.45);
+	}
+
+	.modal-conteudo {
+		background: #fff;
+		margin: 8% auto;
+		padding: 20px;
+		border-radius: 14px;
+		max-width: 600px;
+		box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+	}
+
+	.modal-fechar {
+		float: right;
+		font-size: 24px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
+	.status-atual {
 			display: inline-block;
 			margin-top: 8px;
 		}
@@ -218,6 +383,29 @@ const checklistControleHTML = `
 	</div>
 </div>
 
+
+<div class="card">
+	<h3>Legenda visual</h3>
+
+	<div class="legenda-status">
+		<span class="legenda-item">
+			<span class="bolinha-status bolinha-pendente"></span>
+			Pendente: ainda falta resolver
+		</span>
+
+		<span class="legenda-item">
+			<span class="bolinha-status bolinha-recebido"></span>
+			Recebido: documento já chegou
+		</span>
+
+		<span class="legenda-item">
+			<span class="bolinha-status bolinha-nao-aplica"></span>
+			Não se aplica: não precisa neste caso
+		</span>
+	</div>
+</div>
+
+
 <a class="botao secundario" href="/detalhes?id={{.Reuniao.ID}}">Voltar para detalhes</a>
 <a class="botao" href="/checklist?id={{.Reuniao.ID}}">Ver checklist em texto</a>
 <a class="botao alerta" href="/whatsapp?id={{.Reuniao.ID}}">Resumo WhatsApp</a>
@@ -267,7 +455,10 @@ const checklistControleHTML = `
 			<div class="item-checklist" data-status="{{.Status}}" data-texto="{{.Grupo}} {{.Item}} {{.Observacao}}">
 				<div class="item-topo">
 					<div>
-						<div class="item-titulo">{{.Item}}</div>
+						<div class="item-titulo">
+							{{.Item}}
+							<button type="button" class="botao-ajuda" onclick="abrirExplicacao('{{js .Item}}', '{{js .Explicacao}}')">?</button>
+						</div>
 						<div class="item-meta">Grupo original: {{.Grupo}}</div>
 					</div>
 
@@ -303,7 +494,32 @@ const checklistControleHTML = `
 	<button type="submit">Salvar checklist</button>
 </form>
 
+<div id="modalExplicacao" class="modal-explicacao">
+	<div class="modal-conteudo">
+		<span class="modal-fechar" onclick="fecharExplicacao()">&times;</span>
+		<h3 id="modalTitulo"></h3>
+		<p id="modalTexto"></p>
+	</div>
+</div>
+
 <script>
+	function abrirExplicacao(titulo, texto) {
+		document.getElementById("modalTitulo").textContent = titulo;
+		document.getElementById("modalTexto").textContent = texto;
+		document.getElementById("modalExplicacao").style.display = "block";
+	}
+
+	function fecharExplicacao() {
+		document.getElementById("modalExplicacao").style.display = "none";
+	}
+
+	window.onclick = function(event) {
+		const modal = document.getElementById("modalExplicacao");
+		if (event.target === modal) {
+			fecharExplicacao();
+		}
+	}
+
 	function textoNormalizado(valor) {
 		return (valor || "")
 			.toLowerCase()
