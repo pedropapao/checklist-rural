@@ -72,172 +72,119 @@ func (app *App) gerarItensChecklist(w http.ResponseWriter, r *http.Request) {
 func montarItensChecklistDaReuniao(r Reuniao) []ItemChecklist {
 	var itens []ItemChecklist
 
-	adicionarItem(&itens, "Documentos pessoais e cadastrais", "RG ou documento oficial com foto")
-	adicionarItem(&itens, "Documentos pessoais e cadastrais", "CPF")
-	adicionarItem(&itens, "Documentos pessoais e cadastrais", "Certidão de estado civil atualizada")
-	adicionarItem(&itens, "Documentos pessoais e cadastrais", "Comprovante de residência atualizado")
-	adicionarItem(&itens, "Documentos pessoais e cadastrais", "Declaração de IRPF completa")
-	adicionarItem(&itens, "Documentos pessoais e cadastrais", "Recibo de entrega do IRPF")
-	adicionarItem(&itens, "Documentos pessoais e cadastrais", "Relação de bens e direitos assinada")
+	// 1. Documentos pessoais e cadastrais
+	adicionarItem(&itens, "Documentos pessoais e cadastrais", "Documentos pessoais básicos do produtor: RG/CNH, CPF, estado civil e comprovante de residência")
+	adicionarItem(&itens, "Documentos pessoais e cadastrais", "IRPF completo com recibo de entrega e relação de bens/direitos")
 
+	// 2. Cadastro bancário
 	if r.CadastroBanco == "sim" {
-		adicionarItem(&itens, "Cadastro bancário", "Conferir cadastro já existente no banco")
+		adicionarItem(&itens, "Cadastro bancário", "Conferir cadastro existente no banco e pendências cadastrais")
 	} else {
 		adicionarItem(&itens, "Cadastro bancário", "Fazer ou atualizar cadastro do produtor no banco")
 	}
 
-	adicionarItem(&itens, "Documentos fundiários", "Matrícula do imóvel atualizada")
-	adicionarItem(&itens, "Documentos fundiários", "Certidão de inteiro teor")
-	adicionarItem(&itens, "Documentos fundiários", "Certidão de ônus reais")
-	adicionarItem(&itens, "Documentos fundiários", "Certidão de ações reipersecutórias")
-	adicionarItem(&itens, "Documentos fundiários", "Conferir validade da matrícula")
-	adicionarItem(&itens, "Documentos fundiários", "CCIR / Incra do último exercício")
-	adicionarItem(&itens, "Documentos fundiários", "Comprovante de quitação do CCIR")
-	adicionarItem(&itens, "Documentos fundiários", "ITR do último exercício")
-	adicionarItem(&itens, "Documentos fundiários", "DARF do ITR quitado")
-
-	if r.ImovelArrendado == "sim" {
-		adicionarItem(&itens, "Documentos fundiários", "Contrato de arrendamento/parceria/comodato vigente")
-		adicionarItem(&itens, "Documentos fundiários", "Contrato cobrindo todo o prazo do financiamento")
-		adicionarItem(&itens, "Documentos fundiários", "Carta de anuência do proprietário")
-		adicionarItem(&itens, "Documentos fundiários", "Autorização para penhor e execução do projeto")
+	if r.FinanciamentoAtivo == "sim" {
+		adicionarItem(&itens, "Cadastro bancário", "Conferir financiamentos rurais ativos e comprometimento de limite")
 	}
 
+	if r.RestricaoCadastral == "sim" {
+		adicionarItem(&itens, "Cadastro bancário", "Verificar restrição cadastral antes de avançar com o projeto")
+	}
+
+	// 3. Documentos fundiários
+	adicionarItem(&itens, "Documentos fundiários", "Matrícula/certidões do imóvel atualizadas: inteiro teor, ônus, ações e validade")
+	adicionarItem(&itens, "Documentos fundiários", "CCIR/Incra atualizado com comprovante de quitação")
+	adicionarItem(&itens, "Documentos fundiários", "ITR do último exercício com DARF quitado")
+
+	if r.ImovelArrendado == "sim" {
+		adicionarItem(&itens, "Documentos fundiários", "Contrato de arrendamento/parceria/comodato vigente, com prazo suficiente para o financiamento")
+		adicionarItem(&itens, "Documentos fundiários", "Anuência do proprietário e autorização para execução do projeto/garantia, se exigido")
+	}
+
+	// 4. Documentos ambientais
 	if r.TemCAR == "sim" {
-		adicionarItem(&itens, "Documentos ambientais", "Recibo do CAR ativo")
-		adicionarItem(&itens, "Documentos ambientais", "Conferir situação do CAR")
+		adicionarItem(&itens, "Documentos ambientais", "CAR da propriedade: recibo ativo e conferência da situação")
 	} else {
 		adicionarItem(&itens, "Documentos ambientais", "Providenciar ou confirmar CAR da propriedade")
 	}
 
-	adicionarItem(&itens, "Documentos ambientais", "Verificar embargos ambientais")
-	adicionarItem(&itens, "Documentos ambientais", "Verificar APP e Reserva Legal")
-	adicionarItem(&itens, "Documentos ambientais", "Verificar unidade de conservação")
-	adicionarItem(&itens, "Documentos ambientais", "Verificar terra indígena ou área quilombola")
+	adicionarItem(&itens, "Documentos ambientais", "Consulta ambiental da área: embargos, APP, Reserva Legal, unidade de conservação, terra indígena ou quilombola")
 
+	// 5. Água e irrigação
 	if r.UsaAgua == "sim" {
-		adicionarItem(&itens, "Água e irrigação", "Outorga de uso de água")
-		adicionarItem(&itens, "Água e irrigação", "Certidão de dispensa de outorga, se aplicável")
-		adicionarItem(&itens, "Água e irrigação", "Licenciamento ou inexigibilidade ambiental")
-		adicionarItem(&itens, "Água e irrigação", "Projeto técnico do sistema de irrigação")
-		adicionarItem(&itens, "Água e irrigação", "Orçamento do sistema de irrigação")
+		adicionarItem(&itens, "Água e irrigação", "Regularidade do uso da água: outorga, dispensa, licenciamento ou inexigibilidade ambiental")
+		adicionarItem(&itens, "Água e irrigação", "Projeto e orçamento do sistema de irrigação ou uso de água")
 	}
 
+	// 6. Supressão vegetal
 	if r.TemSupressao == "sim" {
-		adicionarItem(&itens, "Supressão vegetal", "ASV - Autorização de Supressão Vegetal")
-		adicionarItem(&itens, "Supressão vegetal", "Conferir compatibilidade com CAR, APP e Reserva Legal")
+		adicionarItem(&itens, "Supressão vegetal", "Autorização de supressão vegetal e compatibilidade com CAR, APP e Reserva Legal")
 	}
 
-	adicionarItem(&itens, "Documentos técnicos gerais", "Projeto técnico")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Orçamento técnico")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Memorial descritivo, se aplicável")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Croqui de localização")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Coordenadas geográficas em graus decimais")
-	adicionarItem(&itens, "Documentos técnicos gerais", "ART ou TRT")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Comprovante de pagamento da ART/TRT")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Assinatura do técnico")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Assinatura do produtor")
-	adicionarItem(&itens, "Documentos técnicos gerais", "Contrato de prestação de serviços técnicos")
+	// 7. Documentos técnicos gerais
+	adicionarItem(&itens, "Documentos técnicos gerais", "Projeto técnico completo: objetivo, orçamento, memorial, croqui e coordenadas")
+	adicionarItem(&itens, "Documentos técnicos gerais", "Responsabilidade técnica: ART/TRT emitida, quitada, assinada e contrato técnico")
+	adicionarItem(&itens, "Documentos técnicos gerais", "Assinaturas obrigatórias do produtor e do técnico")
 
 	tipo := strings.ToLower(r.TipoProjeto)
 	atividade := strings.ToLower(r.Atividade)
 
+	// 8. Custeio agrícola
 	if strings.Contains(tipo, "custeio agrícola") || r.PrecisaZARC == "sim" {
-		adicionarItem(&itens, "Custeio agrícola", "Cultura financiada")
-		adicionarItem(&itens, "Custeio agrícola", "Área plantada")
-		adicionarItem(&itens, "Custeio agrícola", "Talhão / gleba")
-		adicionarItem(&itens, "Custeio agrícola", "Variedade / cultivar")
-		adicionarItem(&itens, "Custeio agrícola", "Data prevista de plantio")
-		adicionarItem(&itens, "Custeio agrícola", "Data prevista de colheita")
-		adicionarItem(&itens, "Custeio agrícola", "Análise de solo")
-		adicionarItem(&itens, "Custeio agrícola", "Recomendação agronômica")
-		adicionarItem(&itens, "Custeio agrícola", "Insumos previstos")
-		adicionarItem(&itens, "Custeio agrícola", "Validar ZARC")
-		adicionarItem(&itens, "Custeio agrícola", "Conferir município dentro do ZARC")
-		adicionarItem(&itens, "Custeio agrícola", "Conferir janela de plantio")
-		adicionarItem(&itens, "Custeio agrícola", "Conferir Proagro ou seguro rural")
+		adicionarItem(&itens, "Custeio agrícola", "Dados da lavoura: cultura, área, talhão/gleba, variedade, plantio e colheita")
+		adicionarItem(&itens, "Custeio agrícola", "Base agronômica: análise de solo, recomendação técnica e insumos previstos")
+		adicionarItem(&itens, "Custeio agrícola", "Validação ZARC: município, cultura e janela de plantio")
+		adicionarItem(&itens, "Custeio agrícola", "Conferir Proagro ou seguro rural, quando aplicável")
 	}
 
+	// 9. Pecuária
 	if strings.Contains(tipo, "custeio pecuário") || r.TemPecuaria == "sim" || strings.Contains(atividade, "pecuária") {
-		adicionarItem(&itens, "Pecuária", "Atividade pecuária definida")
-		adicionarItem(&itens, "Pecuária", "Ficha sanitária do rebanho")
-		adicionarItem(&itens, "Pecuária", "Declaração de vacinação")
-		adicionarItem(&itens, "Pecuária", "Quantidade atual de animais")
-		adicionarItem(&itens, "Pecuária", "Categorias do rebanho")
-		adicionarItem(&itens, "Pecuária", "Capacidade de suporte")
-		adicionarItem(&itens, "Pecuária", "Pastagens disponíveis")
-		adicionarItem(&itens, "Pecuária", "Manejo previsto")
-		adicionarItem(&itens, "Pecuária", "Evolução de rebanho")
-		adicionarItem(&itens, "Pecuária", "Projeção zootécnica")
+		adicionarItem(&itens, "Pecuária", "Atividade pecuária definida e finalidade do crédito")
+		adicionarItem(&itens, "Pecuária", "Sanidade do rebanho: ficha sanitária e declaração de vacinação")
+		adicionarItem(&itens, "Pecuária", "Rebanho atual: quantidade de animais e categorias")
+		adicionarItem(&itens, "Pecuária", "Suporte produtivo: pastagens, capacidade de suporte e manejo previsto")
+		adicionarItem(&itens, "Pecuária", "Evolução do rebanho e projeção zootécnica")
 	}
 
+	// 10. Investimento
 	if strings.Contains(tipo, "investimento") || r.TemInvestimento == "sim" {
-		adicionarItem(&itens, "Investimento", "Objetivo do investimento")
-		adicionarItem(&itens, "Investimento", "Justificativa técnica")
-		adicionarItem(&itens, "Investimento", "Mínimo de 3 propostas comerciais com CNPJ")
-		adicionarItem(&itens, "Investimento", "Validade das propostas comerciais")
-		adicionarItem(&itens, "Investimento", "Cronograma físico-financeiro")
-		adicionarItem(&itens, "Investimento", "Cronograma de desembolso")
-		adicionarItem(&itens, "Investimento", "Comprovação de capacidade de pagamento")
-		adicionarItem(&itens, "Investimento", "Compatibilidade do investimento com a atividade")
+		adicionarItem(&itens, "Investimento", "Objetivo, justificativa técnica e compatibilidade do investimento com a atividade")
+		adicionarItem(&itens, "Investimento", "Propostas comerciais com CNPJ e validade")
+		adicionarItem(&itens, "Investimento", "Cronograma físico-financeiro e cronograma de desembolso")
+		adicionarItem(&itens, "Investimento", "Comprovação da capacidade de pagamento")
 	}
 
+	// 11. Máquinas e equipamentos
 	if strings.Contains(atividade, "máquinas") || strings.Contains(atividade, "equipamentos") {
-		adicionarItem(&itens, "Máquinas e equipamentos", "Tipo de máquina/equipamento")
-		adicionarItem(&itens, "Máquinas e equipamentos", "Marca")
-		adicionarItem(&itens, "Máquinas e equipamentos", "Modelo")
-		adicionarItem(&itens, "Máquinas e equipamentos", "Ano, se usado")
-		adicionarItem(&itens, "Máquinas e equipamentos", "Novo ou usado")
-		adicionarItem(&itens, "Máquinas e equipamentos", "Proposta comercial")
-		adicionarItem(&itens, "Máquinas e equipamentos", "Fornecedor com CNPJ")
-		adicionarItem(&itens, "Máquinas e equipamentos", "Condições de entrega")
+		adicionarItem(&itens, "Máquinas e equipamentos", "Identificação da máquina/equipamento: tipo, marca, modelo, ano e condição novo/usado")
+		adicionarItem(&itens, "Máquinas e equipamentos", "Proposta comercial do fornecedor com CNPJ e condições de entrega")
 	}
 
+	// 12. Obras e benfeitorias
 	if r.TemObra == "sim" || strings.Contains(atividade, "obras") || strings.Contains(atividade, "benfeitorias") {
-		adicionarItem(&itens, "Obras e benfeitorias", "Descrição da obra")
-		adicionarItem(&itens, "Obras e benfeitorias", "Local da obra")
-		adicionarItem(&itens, "Obras e benfeitorias", "Projeto técnico da construção")
-		adicionarItem(&itens, "Obras e benfeitorias", "Memorial descritivo")
-		adicionarItem(&itens, "Obras e benfeitorias", "Orçamento de materiais")
-		adicionarItem(&itens, "Obras e benfeitorias", "Orçamento de mão de obra")
-		adicionarItem(&itens, "Obras e benfeitorias", "Cronograma físico-financeiro")
-		adicionarItem(&itens, "Obras e benfeitorias", "Licença ou autorização, se exigida")
-		adicionarItem(&itens, "Obras e benfeitorias", "Fotos do local")
-		adicionarItem(&itens, "Obras e benfeitorias", "Coordenadas do local")
+		adicionarItem(&itens, "Obras e benfeitorias", "Caracterização da obra: descrição, local, fotos e coordenadas")
+		adicionarItem(&itens, "Obras e benfeitorias", "Projeto da construção, memorial descritivo e orçamento de materiais/mão de obra")
+		adicionarItem(&itens, "Obras e benfeitorias", "Cronograma físico-financeiro e licença/autorização, se exigida")
 	}
 
 	banco := strings.ToLower(r.Banco)
 
+	// 13. Banco do Brasil
 	if strings.Contains(banco, "brasil") {
-		adicionarItem(&itens, "Banco do Brasil", "Ficha cadastral Banco do Brasil")
-		adicionarItem(&itens, "Banco do Brasil", "Projeto/orçamento emitido no sistema oficial BB")
-		adicionarItem(&itens, "Banco do Brasil", "Projeto/orçamento assinado")
-		adicionarItem(&itens, "Banco do Brasil", "Croqui com coordenadas em graus decimais")
-		adicionarItem(&itens, "Banco do Brasil", "Matrícula com validade de 30 dias")
-		adicionarItem(&itens, "Banco do Brasil", "Certidões de ônus e ações")
-		adicionarItem(&itens, "Banco do Brasil", "CCIR quitado")
-		adicionarItem(&itens, "Banco do Brasil", "ITR e DARF quitados")
-		adicionarItem(&itens, "Banco do Brasil", "Anuência do proprietário, se aplicável")
-		adicionarItem(&itens, "Banco do Brasil", "3 propostas comerciais para investimento")
-		adicionarItem(&itens, "Banco do Brasil", "Cronograma físico-financeiro para investimento fixo")
-		adicionarItem(&itens, "Banco do Brasil", "Ficha sanitária ou vacinação para pecuária")
+		adicionarItem(&itens, "Banco do Brasil", "Conferir ficha cadastral e exigências específicas do Banco do Brasil")
+		adicionarItem(&itens, "Banco do Brasil", "Projeto/orçamento no padrão ou sistema oficial do BB, quando exigido")
+		adicionarItem(&itens, "Banco do Brasil", "Conferir documentos do imóvel conforme validade exigida pelo BB")
+		adicionarItem(&itens, "Banco do Brasil", "Conferir documentos específicos por finalidade: investimento, pecuária, custeio ou garantia")
 	}
 
+	// 14. Sicoob
 	if strings.Contains(banco, "sicoob") {
-		adicionarItem(&itens, "Sicoob", "Planilha oficial Sicoob preenchida")
-		adicionarItem(&itens, "Sicoob", "Planilha oficial Sicoob assinada pelo produtor")
-		adicionarItem(&itens, "Sicoob", "Planilha oficial Sicoob assinada pelo técnico")
-		adicionarItem(&itens, "Sicoob", "PUC - Proposta de Utilização de Crédito")
-		adicionarItem(&itens, "Sicoob", "PUC assinada")
-		adicionarItem(&itens, "Sicoob", "Carta de internalização")
-		adicionarItem(&itens, "Sicoob", "Contrato de prestação de serviços técnicos")
-		adicionarItem(&itens, "Sicoob", "ART ou TRT emitida, quitada e assinada")
-		adicionarItem(&itens, "Sicoob", "Cronograma de desembolso")
-		adicionarItem(&itens, "Sicoob", "Cronograma de reembolso")
+		adicionarItem(&itens, "Sicoob", "Planilha oficial Sicoob preenchida e assinada pelo produtor e técnico")
+		adicionarItem(&itens, "Sicoob", "PUC - Proposta de Utilização de Crédito preenchida e assinada")
+		adicionarItem(&itens, "Sicoob", "Carta de internalização, contrato técnico e ART/TRT emitida, quitada e assinada")
+		adicionarItem(&itens, "Sicoob", "Cronogramas de desembolso e reembolso")
 		adicionarItem(&itens, "Sicoob", "Orçamentos detalhados com CNPJ")
-		adicionarItem(&itens, "Sicoob", "Projeção zootécnica para pecuária")
-		adicionarItem(&itens, "Sicoob", "Plano de manejo do rebanho")
-		adicionarItem(&itens, "Sicoob", "Evolução de rebanho por eras/categorias")
+		adicionarItem(&itens, "Sicoob", "Documentos zootécnicos para pecuária: projeção, manejo e evolução do rebanho")
 	}
 
 	return itens
