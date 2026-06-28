@@ -792,7 +792,14 @@ const detalhesHTML = `
 </div>
 
 <div class="card">
-	<h3>Pré-análise do produtor e do projeto</h3>
+	
+<p>
+	<a class="botao" href="/relatorio?id={{.Reuniao.ID}}" target="_blank">
+		Exportar relatório da pré-análise
+	</a>
+</p>
+
+<h3>Pré-análise do produtor e do projeto</h3>
 
 <p class="pequeno">
 	Preencha esta parte conversando com o produtor. As respostas ajudam a classificar o caso, montar o checklist e futuramente sugerir possíveis linhas de crédito.
