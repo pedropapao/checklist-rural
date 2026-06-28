@@ -961,6 +961,27 @@ const detalhesHTML = `
 	</div>
 	{{end}}
 
+
+{{if .LinhasBB}}
+<div class="card destaque">
+	<h3>Possíveis linhas BB</h3>
+
+	<p class="pequeno">
+		Sugestão inicial gerada a partir da pré-análise. Não substitui o enquadramento oficial, a análise cadastral, a política vigente do banco nem a conferência documental.
+	</p>
+
+	{{range .LinhasBB}}
+	<div class="card">
+		<h4>{{.Nome}}</h4>
+		<p><strong>Motivo:</strong> {{.Motivo}}</p>
+		<p><strong>Atenção:</strong> {{.Atencao}}</p>
+	</div>
+	{{end}}
+</div>
+{{end}}
+
+
+
 	<div class="card">
 		<h4>Atenções identificadas</h4>
 		<ul>

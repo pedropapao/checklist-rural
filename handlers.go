@@ -311,9 +311,10 @@ func (app *App) telaEditarReuniao(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.New("editar").Parse(htmlBase(editarReuniaoHTML)))
 
 	dados := map[string]any{
-		"Titulo":  "Editar reunião",
-		"Reuniao": reuniao,
-		"Leitura": montarLeituraInicial(reuniao),
+		"Titulo":   "Editar reunião",
+		"Reuniao":  reuniao,
+		"Leitura":  montarLeituraInicial(reuniao),
+		"LinhasBB": sugerirLinhasBB(reuniao),
 	}
 
 	tpl.Execute(w, dados)
@@ -447,9 +448,10 @@ func (app *App) telaConfirmarExcluir(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.New("confirmarExcluir").Parse(htmlBase(confirmarExcluirHTML)))
 
 	dados := map[string]any{
-		"Titulo":  "Confirmar exclusão",
-		"Reuniao": reuniao,
-		"Leitura": montarLeituraInicial(reuniao),
+		"Titulo":   "Confirmar exclusão",
+		"Reuniao":  reuniao,
+		"Leitura":  montarLeituraInicial(reuniao),
+		"LinhasBB": sugerirLinhasBB(reuniao),
 	}
 
 	tpl.Execute(w, dados)
@@ -494,10 +496,11 @@ func (app *App) telaDetalhes(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.New("detalhes").Parse(htmlBase(detalhesHTML)))
 
 	dados := map[string]any{
-		"Titulo":  "Detalhes da reunião",
-		"Reuniao": reuniao,
-		"Leitura": montarLeituraInicial(reuniao),
-		"Resumo":  app.resumoDaReuniao(reuniao),
+		"Titulo":   "Detalhes da reunião",
+		"Reuniao":  reuniao,
+		"Leitura":  montarLeituraInicial(reuniao),
+		"LinhasBB": sugerirLinhasBB(reuniao),
+		"Resumo":   app.resumoDaReuniao(reuniao),
 	}
 
 	tpl.Execute(w, dados)
