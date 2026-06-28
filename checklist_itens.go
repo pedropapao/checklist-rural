@@ -187,6 +187,8 @@ func montarItensChecklistDaReuniao(r Reuniao) []ItemChecklist {
 		adicionarItem(&itens, "Sicoob", "Documentos zootécnicos para pecuária: projeção, manejo e evolução do rebanho")
 	}
 
+	itens = adicionarItensPorLinhaCredito(itens, r)
+
 	return itens
 }
 
