@@ -39,6 +39,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	err = app.criarColunasTriagem()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = app.corrigirClassificacaoReunioesAntigas()
 	if err != nil {
 		log.Fatal(err)

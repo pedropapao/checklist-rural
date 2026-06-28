@@ -250,42 +250,84 @@ const novaReuniaoHTML = `
 		<option value="Outro">Outro</option>
 	</select>
 
-	<h3>Classificação do produtor</h3>
+	<h3>Pré-análise do produtor e do projeto</h3>
 
-	<label>Receita Bruta Agropecuária Anual - RBA</label>
-	<input type="text" name="renda_anual" value="{{printf "%.2f" .Reuniao.RendaAnual}}" placeholder="Ex: 500000,00">
-
-	<p class="pequeno">
-		Informe a renda bruta agropecuária anual aproximada para classificar o produtor.
-	</p>
-
-	<h3>Triagem guiada</h3>
+<p class="pequeno">
+	Preencha esta parte conversando com o produtor. As respostas ajudam a classificar o caso, montar o checklist e futuramente sugerir possíveis linhas de crédito.
+</p>
 
 <div class="card">
-	<h4>1. Situação cadastral do produtor</h4>
+	<h4>1. Quem é o produtor?</h4>
+
+	<label>Qual é a Receita Bruta Agropecuária Anual aproximada?</label>
+	<input type="text" name="renda_anual" placeholder="Ex: 500000,00">
+
+	<label class="check">
+		<input type="checkbox" name="possui_caf" value="sim">
+		O produtor possui CAF ativo para agricultura familiar?
+	</label>
+
+	<p class="pequeno">
+		Essa etapa ajuda a separar se o produtor pode caminhar para agricultura familiar, médio produtor ou outro enquadramento.
+	</p>
+</div>
+
+<div class="card">
+	<h4>2. O que o produtor quer financiar?</h4>
+
+	<label>Qual é a finalidade principal do crédito?</label>
+	<select name="finalidade_credito">
+		<option value="">Selecione</option>
+		<option value="Custeio agrícola">Custeio agrícola / safra</option>
+		<option value="Custeio pecuário">Custeio pecuário / animais</option>
+		<option value="Investimento">Investimento na propriedade</option>
+		<option value="Máquinas e equipamentos">Máquinas e equipamentos</option>
+		<option value="Obras e benfeitorias">Obras, construção ou benfeitorias</option>
+		<option value="Irrigação">Irrigação ou uso de água</option>
+	</select>
+
+	<label>Qual valor aproximado o produtor pretende financiar?</label>
+	<input type="text" name="valor_pretendido" placeholder="Ex: 250000,00">
+
+	<label class="check">
+		<input type="checkbox" name="tem_orcamento" value="sim">
+		O produtor já tem orçamento, proposta comercial ou valor definido?
+	</label>
+
+	<p class="pequeno">
+		Aqui você identifica se a demanda é custeio, investimento, máquina, obra, irrigação ou pecuária.
+	</p>
+</div>
+
+<div class="card">
+	<h4>3. Relação com o banco</h4>
 
 	<label class="check">
 		<input type="checkbox" name="cadastro_banco" value="sim">
-		O produtor já tem cadastro no banco pretendido?
+		O produtor já tem cadastro nesse banco ou cooperativa?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="financiamento_ativo" value="sim">
-		O produtor possui financiamento rural ativo?
+		O produtor possui financiamento rural ativo hoje?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="restricao_cadastral" value="sim">
-		O produtor informou alguma restrição cadastral conhecida?
+		Existe alguma restrição ou pendência no CPF/CNPJ que ele saiba?
 	</label>
+
+	<p class="pequeno">
+		Essa parte ajuda a saber se o projeto pode andar ou se primeiro será necessário resolver cadastro, limite ou pendência.
+	</p>
 </div>
 
 <div class="card">
-	<h4>2. Situação da propriedade</h4>
+	<h4>4. Situação da terra</h4>
 
 	<label class="check">
 		<input type="checkbox" name="imovel_proprio" value="sim">
-		A área do projeto é imóvel próprio?
+		A área onde será feito o projeto é própria?
 	</label>
 
 	<label class="check">
@@ -295,46 +337,58 @@ const novaReuniaoHTML = `
 
 	<label class="check">
 		<input type="checkbox" name="tem_car" value="sim">
-		A propriedade possui CAR?
+		A propriedade já possui CAR?
 	</label>
+
+	<p class="pequeno">
+		Se a área não for própria, o checklist vai precisar considerar contrato, anuência e autorização do proprietário.
+	</p>
 </div>
 
 <div class="card">
-	<h4>3. Situação ambiental e uso da área</h4>
+	<h4>5. Ambiental e uso da água</h4>
 
 	<label class="check">
 		<input type="checkbox" name="usa_agua" value="sim">
-		O projeto usa água, irrigação, poço, represa ou pecuária intensiva?
+		O projeto vai usar água, poço, represa, rio, córrego ou irrigação?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="tem_supressao" value="sim">
-		Haverá supressão vegetal, abertura de área ou limpeza de vegetação nativa?
+		Vai precisar abrir área, retirar vegetação ou limpar vegetação nativa?
 	</label>
+
+	<p class="pequeno">
+		Essa etapa aponta riscos ambientais que podem exigir outorga, dispensa, licença ou autorização.
+	</p>
 </div>
 
 <div class="card">
-	<h4>4. Tipo do projeto pretendido</h4>
+	<h4>6. Pontos técnicos do projeto</h4>
 
 	<label class="check">
 		<input type="checkbox" name="tem_pecuaria" value="sim">
-		O projeto envolve pecuária?
+		O projeto envolve pecuária, rebanho, pastagem, leite ou corte?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="tem_investimento" value="sim">
-		O projeto envolve investimento?
+		O projeto envolve compra, melhoria, estrutura ou investimento na propriedade?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="tem_obra" value="sim">
-		O projeto possui obra, construção, reforma ou benfeitoria?
+		O projeto envolve obra, construção, reforma, curral, barracão ou benfeitoria?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="precisa_zarc" value="sim">
-		O projeto precisa validar ZARC?
+		É lavoura/custeio agrícola e precisa conferir ZARC?
 	</label>
+
+	<p class="pequeno">
+		Essas respostas definem quais blocos entram no checklist técnico.
+	</p>
 </div>
 
 <label>Observações iniciais</label>
@@ -504,42 +558,84 @@ const editarReuniaoHTML = `
 		<option value="Outro" {{if eq .Reuniao.Atividade "Outro"}}selected{{end}}>Outro</option>
 	</select>
 
-	<h3>Classificação do produtor</h3>
+	<h3>Pré-análise do produtor e do projeto</h3>
 
-	<label>Receita Bruta Agropecuária Anual - RBA</label>
-	<input type="text" name="renda_anual" value="{{printf "%.2f" .Reuniao.RendaAnual}}" placeholder="Ex: 500000,00">
-
-	<p class="pequeno">
-		Informe a renda bruta agropecuária anual aproximada para classificar o produtor.
-	</p>
-
-	<h3>Triagem guiada</h3>
+<p class="pequeno">
+	Preencha esta parte conversando com o produtor. As respostas ajudam a classificar o caso, montar o checklist e futuramente sugerir possíveis linhas de crédito.
+</p>
 
 <div class="card">
-	<h4>1. Situação cadastral do produtor</h4>
+	<h4>1. Quem é o produtor?</h4>
+
+	<label>Qual é a Receita Bruta Agropecuária Anual aproximada?</label>
+	<input type="text" name="renda_anual" value="{{printf "%.2f" .Reuniao.RendaAnual}}" placeholder="Ex: 500000,00">
+
+	<label class="check">
+		<input type="checkbox" name="possui_caf" value="sim" {{if eq .Reuniao.PossuiCAF "sim"}}checked{{end}}>
+		O produtor possui CAF ativo para agricultura familiar?
+	</label>
+
+	<p class="pequeno">
+		Essa etapa ajuda a separar se o produtor pode caminhar para agricultura familiar, médio produtor ou outro enquadramento.
+	</p>
+</div>
+
+<div class="card">
+	<h4>2. O que o produtor quer financiar?</h4>
+
+	<label>Qual é a finalidade principal do crédito?</label>
+	<select name="finalidade_credito">
+		<option value="">Selecione</option>
+		<option value="Custeio agrícola" {{if eq .Reuniao.FinalidadeCredito "Custeio agrícola"}}selected{{end}}>Custeio agrícola / safra</option>
+		<option value="Custeio pecuário" {{if eq .Reuniao.FinalidadeCredito "Custeio pecuário"}}selected{{end}}>Custeio pecuário / animais</option>
+		<option value="Investimento" {{if eq .Reuniao.FinalidadeCredito "Investimento"}}selected{{end}}>Investimento na propriedade</option>
+		<option value="Máquinas e equipamentos" {{if eq .Reuniao.FinalidadeCredito "Máquinas e equipamentos"}}selected{{end}}>Máquinas e equipamentos</option>
+		<option value="Obras e benfeitorias" {{if eq .Reuniao.FinalidadeCredito "Obras e benfeitorias"}}selected{{end}}>Obras, construção ou benfeitorias</option>
+		<option value="Irrigação" {{if eq .Reuniao.FinalidadeCredito "Irrigação"}}selected{{end}}>Irrigação ou uso de água</option>
+	</select>
+
+	<label>Qual valor aproximado o produtor pretende financiar?</label>
+	<input type="text" name="valor_pretendido" value="{{printf "%.2f" .Reuniao.ValorPretendido}}" placeholder="Ex: 250000,00">
+
+	<label class="check">
+		<input type="checkbox" name="tem_orcamento" value="sim" {{if eq .Reuniao.TemOrcamento "sim"}}checked{{end}}>
+		O produtor já tem orçamento, proposta comercial ou valor definido?
+	</label>
+
+	<p class="pequeno">
+		Aqui você identifica se a demanda é custeio, investimento, máquina, obra, irrigação ou pecuária.
+	</p>
+</div>
+
+<div class="card">
+	<h4>3. Relação com o banco</h4>
 
 	<label class="check">
 		<input type="checkbox" name="cadastro_banco" value="sim" {{if eq .Reuniao.CadastroBanco "sim"}}checked{{end}}>
-		O produtor já tem cadastro no banco pretendido?
+		O produtor já tem cadastro nesse banco ou cooperativa?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="financiamento_ativo" value="sim" {{if eq .Reuniao.FinanciamentoAtivo "sim"}}checked{{end}}>
-		O produtor possui financiamento rural ativo?
+		O produtor possui financiamento rural ativo hoje?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="restricao_cadastral" value="sim" {{if eq .Reuniao.RestricaoCadastral "sim"}}checked{{end}}>
-		O produtor informou alguma restrição cadastral conhecida?
+		Existe alguma restrição ou pendência no CPF/CNPJ que ele saiba?
 	</label>
+
+	<p class="pequeno">
+		Essa parte ajuda a saber se o projeto pode andar ou se primeiro será necessário resolver cadastro, limite ou pendência.
+	</p>
 </div>
 
 <div class="card">
-	<h4>2. Situação da propriedade</h4>
+	<h4>4. Situação da terra</h4>
 
 	<label class="check">
 		<input type="checkbox" name="imovel_proprio" value="sim" {{if eq .Reuniao.ImovelProprio "sim"}}checked{{end}}>
-		A área do projeto é imóvel próprio?
+		A área onde será feito o projeto é própria?
 	</label>
 
 	<label class="check">
@@ -549,46 +645,58 @@ const editarReuniaoHTML = `
 
 	<label class="check">
 		<input type="checkbox" name="tem_car" value="sim" {{if eq .Reuniao.TemCAR "sim"}}checked{{end}}>
-		A propriedade possui CAR?
+		A propriedade já possui CAR?
 	</label>
+
+	<p class="pequeno">
+		Se a área não for própria, o checklist vai precisar considerar contrato, anuência e autorização do proprietário.
+	</p>
 </div>
 
 <div class="card">
-	<h4>3. Situação ambiental e uso da área</h4>
+	<h4>5. Ambiental e uso da água</h4>
 
 	<label class="check">
 		<input type="checkbox" name="usa_agua" value="sim" {{if eq .Reuniao.UsaAgua "sim"}}checked{{end}}>
-		O projeto usa água, irrigação, poço, represa ou pecuária intensiva?
+		O projeto vai usar água, poço, represa, rio, córrego ou irrigação?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="tem_supressao" value="sim" {{if eq .Reuniao.TemSupressao "sim"}}checked{{end}}>
-		Haverá supressão vegetal, abertura de área ou limpeza de vegetação nativa?
+		Vai precisar abrir área, retirar vegetação ou limpar vegetação nativa?
 	</label>
+
+	<p class="pequeno">
+		Essa etapa aponta riscos ambientais que podem exigir outorga, dispensa, licença ou autorização.
+	</p>
 </div>
 
 <div class="card">
-	<h4>4. Tipo do projeto pretendido</h4>
+	<h4>6. Pontos técnicos do projeto</h4>
 
 	<label class="check">
 		<input type="checkbox" name="tem_pecuaria" value="sim" {{if eq .Reuniao.TemPecuaria "sim"}}checked{{end}}>
-		O projeto envolve pecuária?
+		O projeto envolve pecuária, rebanho, pastagem, leite ou corte?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="tem_investimento" value="sim" {{if eq .Reuniao.TemInvestimento "sim"}}checked{{end}}>
-		O projeto envolve investimento?
+		O projeto envolve compra, melhoria, estrutura ou investimento na propriedade?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="tem_obra" value="sim" {{if eq .Reuniao.TemObra "sim"}}checked{{end}}>
-		O projeto possui obra, construção, reforma ou benfeitoria?
+		O projeto envolve obra, construção, reforma, curral, barracão ou benfeitoria?
 	</label>
 
 	<label class="check">
 		<input type="checkbox" name="precisa_zarc" value="sim" {{if eq .Reuniao.PrecisaZARC "sim"}}checked{{end}}>
-		O projeto precisa validar ZARC?
+		É lavoura/custeio agrícola e precisa conferir ZARC?
 	</label>
+
+	<p class="pequeno">
+		Essas respostas definem quais blocos entram no checklist técnico.
+	</p>
 </div>
 
 <label>Observações iniciais</label>
@@ -684,98 +792,195 @@ const detalhesHTML = `
 </div>
 
 <div class="card">
-	<h3>Triagem guiada</h3>
+	<h3>Pré-análise do produtor e do projeto</h3>
+
+<p class="pequeno">
+	Preencha esta parte conversando com o produtor. As respostas ajudam a classificar o caso, montar o checklist e futuramente sugerir possíveis linhas de crédito.
+</p>
 
 <div class="card">
-	<h4>1. Situação cadastral do produtor</h4>
+	<h4>1. Quem é o produtor?</h4>
+
+	<label>Qual é a Receita Bruta Agropecuária Anual aproximada?</label>
+	<input type="text" name="renda_anual" readonly value="{{printf "%.2f" .Reuniao.RendaAnual}}" placeholder="Ex: 500000,00">
 
 	<label class="check">
-		<input type="checkbox" name="cadastro_banco" value="sim" disabled {{if eq .Reuniao.CadastroBanco "sim"}}checked{{end}}>
-		O produtor já tem cadastro no banco pretendido?
+		<input type="checkbox" disabled name="possui_caf" value="sim" {{if eq .Reuniao.PossuiCAF "sim"}}checked{{end}}>
+		O produtor possui CAF ativo para agricultura familiar?
 	</label>
-
-	<label class="check">
-		<input type="checkbox" name="financiamento_ativo" value="sim" disabled {{if eq .Reuniao.FinanciamentoAtivo "sim"}}checked{{end}}>
-		O produtor possui financiamento rural ativo?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" name="restricao_cadastral" value="sim" disabled {{if eq .Reuniao.RestricaoCadastral "sim"}}checked{{end}}>
-		O produtor informou alguma restrição cadastral conhecida?
-	</label>
-</div>
-
-<div class="card">
-	<h4>2. Classificação pela renda rural</h4>
-
-	<label>Receita Bruta Agropecuária Anual - RBA</label>
-	<input type="text" name="renda_anual" placeholder="Ex: 500000,00">
 
 	<p class="pequeno">
-		Informe a renda bruta agropecuária anual aproximada do produtor.
-		O sistema usará esse valor para classificar como pequeno, médio ou grande produtor.
+		Essa etapa ajuda a separar se o produtor pode caminhar para agricultura familiar, médio produtor ou outro enquadramento.
 	</p>
 </div>
 
 <div class="card">
-	<h4>3. Situação da propriedade</h4>
+	<h4>2. O que o produtor quer financiar?</h4>
+
+	<label>Qual é a finalidade principal do crédito?</label>
+	<select name="finalidade_credito" disabled>
+		<option value="">Selecione</option>
+		<option value="Custeio agrícola" {{if eq .Reuniao.FinalidadeCredito "Custeio agrícola"}}selected{{end}}>Custeio agrícola / safra</option>
+		<option value="Custeio pecuário" {{if eq .Reuniao.FinalidadeCredito "Custeio pecuário"}}selected{{end}}>Custeio pecuário / animais</option>
+		<option value="Investimento" {{if eq .Reuniao.FinalidadeCredito "Investimento"}}selected{{end}}>Investimento na propriedade</option>
+		<option value="Máquinas e equipamentos" {{if eq .Reuniao.FinalidadeCredito "Máquinas e equipamentos"}}selected{{end}}>Máquinas e equipamentos</option>
+		<option value="Obras e benfeitorias" {{if eq .Reuniao.FinalidadeCredito "Obras e benfeitorias"}}selected{{end}}>Obras, construção ou benfeitorias</option>
+		<option value="Irrigação" {{if eq .Reuniao.FinalidadeCredito "Irrigação"}}selected{{end}}>Irrigação ou uso de água</option>
+	</select>
+
+	<label>Qual valor aproximado o produtor pretende financiar?</label>
+	<input type="text" name="valor_pretendido" readonly value="{{printf "%.2f" .Reuniao.ValorPretendido}}" placeholder="Ex: 250000,00">
 
 	<label class="check">
-		<input type="checkbox" name="imovel_proprio" value="sim" disabled {{if eq .Reuniao.ImovelProprio "sim"}}checked{{end}}>
-		A área do projeto é imóvel próprio?
+		<input type="checkbox" disabled name="tem_orcamento" value="sim" {{if eq .Reuniao.TemOrcamento "sim"}}checked{{end}}>
+		O produtor já tem orçamento, proposta comercial ou valor definido?
+	</label>
+
+	<p class="pequeno">
+		Aqui você identifica se a demanda é custeio, investimento, máquina, obra, irrigação ou pecuária.
+	</p>
+</div>
+
+<div class="card">
+	<h4>3. Relação com o banco</h4>
+
+	<label class="check">
+		<input type="checkbox" disabled name="cadastro_banco" value="sim" {{if eq .Reuniao.CadastroBanco "sim"}}checked{{end}}>
+		O produtor já tem cadastro nesse banco ou cooperativa?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="imovel_arrendado" value="sim" disabled {{if eq .Reuniao.ImovelArrendado "sim"}}checked{{end}}>
+		<input type="checkbox" disabled name="financiamento_ativo" value="sim" {{if eq .Reuniao.FinanciamentoAtivo "sim"}}checked{{end}}>
+		O produtor possui financiamento rural ativo hoje?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" disabled name="restricao_cadastral" value="sim" {{if eq .Reuniao.RestricaoCadastral "sim"}}checked{{end}}>
+		Existe alguma restrição ou pendência no CPF/CNPJ que ele saiba?
+	</label>
+
+	<p class="pequeno">
+		Essa parte ajuda a saber se o projeto pode andar ou se primeiro será necessário resolver cadastro, limite ou pendência.
+	</p>
+</div>
+
+<div class="card">
+	<h4>4. Situação da terra</h4>
+
+	<label class="check">
+		<input type="checkbox" disabled name="imovel_proprio" value="sim" {{if eq .Reuniao.ImovelProprio "sim"}}checked{{end}}>
+		A área onde será feito o projeto é própria?
+	</label>
+
+	<label class="check">
+		<input type="checkbox" disabled name="imovel_arrendado" value="sim" {{if eq .Reuniao.ImovelArrendado "sim"}}checked{{end}}>
 		A área é arrendada, parceria ou comodato?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_car" value="sim" disabled {{if eq .Reuniao.TemCAR "sim"}}checked{{end}}>
-		A propriedade possui CAR?
+		<input type="checkbox" disabled name="tem_car" value="sim" {{if eq .Reuniao.TemCAR "sim"}}checked{{end}}>
+		A propriedade já possui CAR?
 	</label>
+
+	<p class="pequeno">
+		Se a área não for própria, o checklist vai precisar considerar contrato, anuência e autorização do proprietário.
+	</p>
 </div>
 
 <div class="card">
-	<h4>4. Situação ambiental e uso da área</h4>
+	<h4>5. Ambiental e uso da água</h4>
 
 	<label class="check">
-		<input type="checkbox" name="usa_agua" value="sim" disabled {{if eq .Reuniao.UsaAgua "sim"}}checked{{end}}>
-		O projeto usa água, irrigação, poço, represa ou pecuária intensiva?
+		<input type="checkbox" disabled name="usa_agua" value="sim" {{if eq .Reuniao.UsaAgua "sim"}}checked{{end}}>
+		O projeto vai usar água, poço, represa, rio, córrego ou irrigação?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_supressao" value="sim" disabled {{if eq .Reuniao.TemSupressao "sim"}}checked{{end}}>
-		Haverá supressão vegetal, abertura de área ou limpeza de vegetação nativa?
+		<input type="checkbox" disabled name="tem_supressao" value="sim" {{if eq .Reuniao.TemSupressao "sim"}}checked{{end}}>
+		Vai precisar abrir área, retirar vegetação ou limpar vegetação nativa?
 	</label>
+
+	<p class="pequeno">
+		Essa etapa aponta riscos ambientais que podem exigir outorga, dispensa, licença ou autorização.
+	</p>
 </div>
 
 <div class="card">
-	<h4>5. Tipo do projeto pretendido</h4>
+	<h4>6. Pontos técnicos do projeto</h4>
 
 	<label class="check">
-		<input type="checkbox" name="tem_pecuaria" value="sim" disabled {{if eq .Reuniao.TemPecuaria "sim"}}checked{{end}}>
-		O projeto envolve pecuária?
+		<input type="checkbox" disabled name="tem_pecuaria" value="sim" {{if eq .Reuniao.TemPecuaria "sim"}}checked{{end}}>
+		O projeto envolve pecuária, rebanho, pastagem, leite ou corte?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_investimento" value="sim" disabled {{if eq .Reuniao.TemInvestimento "sim"}}checked{{end}}>
-		O projeto envolve investimento?
+		<input type="checkbox" disabled name="tem_investimento" value="sim" {{if eq .Reuniao.TemInvestimento "sim"}}checked{{end}}>
+		O projeto envolve compra, melhoria, estrutura ou investimento na propriedade?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="tem_obra" value="sim" disabled {{if eq .Reuniao.TemObra "sim"}}checked{{end}}>
-		O projeto possui obra, construção, reforma ou benfeitoria?
+		<input type="checkbox" disabled name="tem_obra" value="sim" {{if eq .Reuniao.TemObra "sim"}}checked{{end}}>
+		O projeto envolve obra, construção, reforma, curral, barracão ou benfeitoria?
 	</label>
 
 	<label class="check">
-		<input type="checkbox" name="precisa_zarc" value="sim" disabled {{if eq .Reuniao.PrecisaZARC "sim"}}checked{{end}}>
-		O projeto precisa validar ZARC?
+		<input type="checkbox" disabled name="precisa_zarc" value="sim" {{if eq .Reuniao.PrecisaZARC "sim"}}checked{{end}}>
+		É lavoura/custeio agrícola e precisa conferir ZARC?
 	</label>
+
+	<p class="pequeno">
+		Essas respostas definem quais blocos entram no checklist técnico.
+	</p>
 </div>
 
-<div class="card">
-	
+
+{{if .Leitura}}
+<div class="card destaque">
+	<h3>Leitura inicial da pré-análise</h3>
+
+	<p class="pequeno">
+		Esta leitura é uma orientação interna para organizar o atendimento. A confirmação final depende dos documentos, cadastro, normas do banco e análise da operação.
+	</p>
+
+	<div class="grid">
+		<div class="card">
+			<h4>Enquadramento provável</h4>
+			<p><strong>{{.Leitura.Enquadramento}}</strong></p>
+		</div>
+
+		<div class="card">
+			<h4>Caminho inicial</h4>
+			<p>{{.Leitura.Caminho}}</p>
+		</div>
+	</div>
+
+	{{if .Leitura.Resumo}}
+	<div class="card">
+		<h4>Resumo da demanda</h4>
+		<p>{{.Leitura.Resumo}}</p>
+	</div>
+	{{end}}
+
+	<div class="card">
+		<h4>Atenções identificadas</h4>
+		<ul>
+			{{range .Leitura.Alertas}}
+			<li>{{.}}</li>
+			{{end}}
+		</ul>
+	</div>
+
+	<div class="card">
+		<h4>Próximos passos sugeridos</h4>
+		<ul>
+			{{range .Leitura.ProximosPassos}}
+			<li>{{.}}</li>
+			{{end}}
+		</ul>
+	</div>
+</div>
+{{end}}
+
 <h3>Observações da reunião</h3>
 	<p>{{.Reuniao.Observacoes}}</p>
 </div>

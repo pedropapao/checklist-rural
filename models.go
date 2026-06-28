@@ -20,6 +20,10 @@ type Reuniao struct {
 
 	RendaAnual            float64
 	ClassificacaoProdutor string
+	PossuiCAF             string
+	FinalidadeCredito     string
+	ValorPretendido       float64
+	TemOrcamento          string
 
 	CadastroBanco      string
 	FinanciamentoAtivo string

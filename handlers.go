@@ -51,10 +51,18 @@ func (app *App) salvarReuniao(w http.ResponseWriter, r *http.Request) {
 	atividade := r.FormValue("atividade")
 	observacoes := r.FormValue("observacoes")
 	rendaAnualTexto := r.FormValue("renda_anual")
+	finalidadeCredito := r.FormValue("finalidade_credito")
+	valorPretendidoTexto := r.FormValue("valor_pretendido")
 
 	rendaAnual, err := normalizarValorMonetario(rendaAnualTexto)
 	if err != nil {
 		http.Error(w, "Renda anual inválida", http.StatusBadRequest)
+		return
+	}
+
+	valorPretendido, err := normalizarValorMonetario(valorPretendidoTexto)
+	if err != nil {
+		http.Error(w, "Valor pretendido inválido", http.StatusBadRequest)
 		return
 	}
 
@@ -71,13 +79,13 @@ func (app *App) salvarReuniao(w http.ResponseWriter, r *http.Request) {
 		INSERT INTO reunioes 
 		(
 			produtor, telefone, municipio, uf, banco, tipo_projeto, atividade,
-			renda_anual, classificacao_produtor,
+			renda_anual, classificacao_produtor, possui_caf, finalidade_credito, valor_pretendido, tem_orcamento,
 			cadastro_banco, financiamento_ativo, restricao_cadastral,
 			imovel_proprio, imovel_arrendado, tem_car, usa_agua,
 			tem_pecuaria, tem_investimento, tem_obra, tem_supressao, precisa_zarc,
 			observacoes, criado_em
 		)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`,
 		produtor,
 		telefone,
@@ -88,6 +96,10 @@ func (app *App) salvarReuniao(w http.ResponseWriter, r *http.Request) {
 		atividade,
 		rendaAnual,
 		classificacaoProdutor,
+		checkValor(r, "possui_caf"),
+		finalidadeCredito,
+		valorPretendido,
+		checkValor(r, "tem_orcamento"),
 		checkValor(r, "cadastro_banco"),
 		checkValor(r, "financiamento_ativo"),
 		checkValor(r, "restricao_cadastral"),
@@ -125,6 +137,10 @@ func (app *App) listarReunioes(w http.ResponseWriter, r *http.Request) {
 			COALESCE(atividade, ''),
 			COALESCE(renda_anual, 0),
 			COALESCE(classificacao_produtor, ''),
+			COALESCE(possui_caf, 'nao'),
+			COALESCE(finalidade_credito, ''),
+			COALESCE(valor_pretendido, 0),
+			COALESCE(tem_orcamento, 'nao'),
 			COALESCE(cadastro_banco, 'nao'),
 			COALESCE(financiamento_ativo, 'nao'),
 			COALESCE(restricao_cadastral, 'nao'),
@@ -164,6 +180,10 @@ func (app *App) listarReunioes(w http.ResponseWriter, r *http.Request) {
 			&reuniao.Atividade,
 			&reuniao.RendaAnual,
 			&reuniao.ClassificacaoProdutor,
+			&reuniao.PossuiCAF,
+			&reuniao.FinalidadeCredito,
+			&reuniao.ValorPretendido,
+			&reuniao.TemOrcamento,
 			&reuniao.CadastroBanco,
 			&reuniao.FinanciamentoAtivo,
 			&reuniao.RestricaoCadastral,
@@ -223,6 +243,10 @@ func (app *App) buscarReuniaoPorID(id int) (Reuniao, error) {
 			COALESCE(atividade, ''),
 			COALESCE(renda_anual, 0),
 			COALESCE(classificacao_produtor, ''),
+			COALESCE(possui_caf, 'nao'),
+			COALESCE(finalidade_credito, ''),
+			COALESCE(valor_pretendido, 0),
+			COALESCE(tem_orcamento, 'nao'),
 			COALESCE(cadastro_banco, 'nao'),
 			COALESCE(financiamento_ativo, 'nao'),
 			COALESCE(restricao_cadastral, 'nao'),
@@ -250,6 +274,10 @@ func (app *App) buscarReuniaoPorID(id int) (Reuniao, error) {
 		&reuniao.Atividade,
 		&reuniao.RendaAnual,
 		&reuniao.ClassificacaoProdutor,
+		&reuniao.PossuiCAF,
+		&reuniao.FinalidadeCredito,
+		&reuniao.ValorPretendido,
+		&reuniao.TemOrcamento,
 		&reuniao.CadastroBanco,
 		&reuniao.FinanciamentoAtivo,
 		&reuniao.RestricaoCadastral,
@@ -285,6 +313,7 @@ func (app *App) telaEditarReuniao(w http.ResponseWriter, r *http.Request) {
 	dados := map[string]any{
 		"Titulo":  "Editar reunião",
 		"Reuniao": reuniao,
+		"Leitura": montarLeituraInicial(reuniao),
 	}
 
 	tpl.Execute(w, dados)
@@ -319,10 +348,18 @@ func (app *App) atualizarReuniao(w http.ResponseWriter, r *http.Request) {
 	atividade := r.FormValue("atividade")
 	observacoes := r.FormValue("observacoes")
 	rendaAnualTexto := r.FormValue("renda_anual")
+	finalidadeCredito := r.FormValue("finalidade_credito")
+	valorPretendidoTexto := r.FormValue("valor_pretendido")
 
 	rendaAnual, err := normalizarValorMonetario(rendaAnualTexto)
 	if err != nil {
 		http.Error(w, "Renda anual inválida", http.StatusBadRequest)
+		return
+	}
+
+	valorPretendido, err := normalizarValorMonetario(valorPretendidoTexto)
+	if err != nil {
+		http.Error(w, "Valor pretendido inválido", http.StatusBadRequest)
 		return
 	}
 
@@ -344,6 +381,10 @@ func (app *App) atualizarReuniao(w http.ResponseWriter, r *http.Request) {
 			atividade = ?,
 			renda_anual = ?,
 			classificacao_produtor = ?,
+			possui_caf = ?,
+			finalidade_credito = ?,
+			valor_pretendido = ?,
+			tem_orcamento = ?,
 			cadastro_banco = ?,
 			financiamento_ativo = ?,
 			restricao_cadastral = ?,
@@ -368,6 +409,10 @@ func (app *App) atualizarReuniao(w http.ResponseWriter, r *http.Request) {
 		atividade,
 		rendaAnual,
 		classificacaoProdutor,
+		checkValor(r, "possui_caf"),
+		finalidadeCredito,
+		valorPretendido,
+		checkValor(r, "tem_orcamento"),
 		checkValor(r, "cadastro_banco"),
 		checkValor(r, "financiamento_ativo"),
 		checkValor(r, "restricao_cadastral"),
@@ -404,6 +449,7 @@ func (app *App) telaConfirmarExcluir(w http.ResponseWriter, r *http.Request) {
 	dados := map[string]any{
 		"Titulo":  "Confirmar exclusão",
 		"Reuniao": reuniao,
+		"Leitura": montarLeituraInicial(reuniao),
 	}
 
 	tpl.Execute(w, dados)
@@ -450,6 +496,7 @@ func (app *App) telaDetalhes(w http.ResponseWriter, r *http.Request) {
 	dados := map[string]any{
 		"Titulo":  "Detalhes da reunião",
 		"Reuniao": reuniao,
+		"Leitura": montarLeituraInicial(reuniao),
 		"Resumo":  app.resumoDaReuniao(reuniao),
 	}
 
