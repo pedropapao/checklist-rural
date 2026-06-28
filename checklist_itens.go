@@ -188,6 +188,7 @@ func montarItensChecklistDaReuniao(r Reuniao) []ItemChecklist {
 	}
 
 	itens = adicionarItensPorLinhaCredito(itens, r)
+	itens = adicionarItensPorLinhaSicoob(itens, r)
 
 	return itens
 }

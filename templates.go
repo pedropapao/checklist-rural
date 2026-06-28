@@ -977,6 +977,11 @@ const detalhesHTML = `
 		<p><strong>Atenção:</strong> {{.Atencao}}</p>
 	</div>
 	{{end}}
+
+
+
+
+
 </div>
 {{end}}
 
@@ -999,6 +1004,25 @@ const detalhesHTML = `
 			{{end}}
 		</ul>
 	</div>
+</div>
+{{end}}
+
+
+{{if .LinhasSicoob}}
+<div class="card destaque">
+	<h3>Possíveis caminhos Sicoob</h3>
+
+	<p class="pequeno">
+		Sugestão inicial gerada a partir da pré-análise e das soluções agro do Sicoob. Não substitui o enquadramento oficial, a análise da cooperativa, a política vigente nem a conferência documental.
+	</p>
+
+	{{range .LinhasSicoob}}
+	<div class="card">
+		<h4>{{.Nome}}</h4>
+		<p><strong>Motivo:</strong> {{.Motivo}}</p>
+		<p><strong>Atenção:</strong> {{.Atencao}}</p>
+	</div>
+	{{end}}
 </div>
 {{end}}
 
