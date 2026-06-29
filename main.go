@@ -70,6 +70,7 @@ func main() {
 	http.HandleFunc("/investigacao-editar", app.editarInvestigacaoRapida)
 	http.HandleFunc("/investigacao", app.painelInvestigacao)
 	http.HandleFunc("/dados-externos-reuniao", app.telaDadosExternosReuniao)
+	http.HandleFunc("/mapa-georef", app.telaMapaGeorreferenciamento)
 	http.HandleFunc("/georreferenciamento", app.telaGeorreferenciamento)
 	http.HandleFunc("/relatorio", app.telaRelatorioPreAnalise)
 	http.HandleFunc("/nova-reuniao", app.telaNovaReuniao)

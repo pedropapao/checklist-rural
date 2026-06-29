@@ -342,6 +342,7 @@ const georreferenciamentoHTML = `
 <div class="barra-acoes">
 	<a class="botao secundario" href="/investigacao?id={{.Reuniao.ID}}">Voltar para investigação</a>
 	<a class="botao secundario" href="/detalhes?id={{.Reuniao.ID}}">Voltar para detalhes</a>
+	<a class="botao" href="/mapa-georef?id={{.Reuniao.ID}}">Ver mapa</a>
 </div>
 
 <div class="card destaque">
