@@ -31,7 +31,8 @@ const investigacaoPainelHTML = `
 
 <div class="barra-acoes">
 	<a class="botao secundario" href="/detalhes?id={{.Reuniao.ID}}">Voltar para detalhes</a>
-	<a class="botao" href="/dados-externos-reuniao?id={{.Reuniao.ID}}">Editar investigação completa</a>
+	<a class="botao" href="/investigacao-editar?id={{.Reuniao.ID}}">Editar investigação rápida</a>
+	<a class="botao secundario" href="/dados-externos-reuniao?id={{.Reuniao.ID}}">Editar investigação completa</a>
 	<a class="botao secundario" href="/georreferenciamento?id={{.Reuniao.ID}}">Georreferenciamento</a>
 </div>
 
