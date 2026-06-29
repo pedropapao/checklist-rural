@@ -973,7 +973,7 @@ const confirmarExcluirHTML = `
 </form>
 `
 
-const detalhesHTML = `
+const detalhesReuniaoModernoHTML = `
 <h2>Detalhes da reunião</h2>
 
 <a class="botao secundario" href="/reunioes">Voltar para reuniões</a>

@@ -495,7 +495,7 @@ func (app *App) telaDetalhes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tpl := template.Must(template.New("detalhes").Parse(htmlBase(detalhesHTML)))
+	tpl := template.Must(template.New("detalhes").Parse(htmlBase(detalhesReuniaoModernoHTML)))
 
 	dados := map[string]any{
 		"Titulo":       "Detalhes da reunião",
@@ -541,9 +541,10 @@ func (app *App) telaWhatsApp(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.New("whatsapp").Parse(htmlBase(whatsappHTML)))
 
 	dados := map[string]any{
-		"Titulo":   "Resumo WhatsApp",
-		"Reuniao":  reuniao,
-		"Mensagem": mensagem,
+		"Titulo":       "Resumo WhatsApp",
+		"Reuniao":      reuniao,
+		"ResumoGeoref": app.resumoArquivosGeorreferenciamento(reuniao.ID),
+		"Mensagem":     mensagem,
 	}
 
 	tpl.Execute(w, dados)
