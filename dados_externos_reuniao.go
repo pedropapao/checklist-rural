@@ -460,10 +460,11 @@ func (app *App) telaDadosExternosReuniao(w http.ResponseWriter, r *http.Request)
 
 	tpl := template.Must(template.New("dados_externos").Parse(htmlBase(dadosExternosReuniaoHTML)))
 	dadosTela := map[string]any{
-		"Titulo":    "Investigação online",
-		"Reuniao":   reuniao,
-		"Dados":     dadosExternos,
-		"Resultado": resultado,
+		"Titulo":       "Investigação online",
+		"Reuniao":      reuniao,
+		"Dados":        dadosExternos,
+		"Resultado":    resultado,
+		"ResumoGeoref": app.resumoArquivosGeorreferenciamento(reuniao.ID),
 	}
 
 	tpl.Execute(w, dadosTela)
@@ -492,6 +493,47 @@ const dadosExternosReuniaoHTML = `
 	<p><strong>Data/hora:</strong> {{.Resultado.DataHora}}</p>
 </div>
 {{end}}
+
+
+<div class="card destaque">
+	<h3>Georreferenciamento da reunião</h3>
+
+	{{if .ResumoGeoref.Total}}
+	<p>
+		<strong>Arquivos importados:</strong> {{.ResumoGeoref.Total}}
+	</p>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Tipo</th>
+				<th>Arquivo</th>
+				<th>Data</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{range .ResumoGeoref.Arquivos}}
+			<tr>
+				<td>{{.Tipo}}</td>
+				<td>{{.NomeOriginal}}</td>
+				<td>{{.CriadoEm}}</td>
+			</tr>
+			{{end}}
+		</tbody>
+	</table>
+	{{else}}
+	<p class="pequeno">
+		Nenhum arquivo de georreferenciamento importado ainda.
+	</p>
+	{{end}}
+
+	<p>
+		<a class="botao" href="/georreferenciamento?id={{.Reuniao.ID}}">
+			Abrir georreferenciamento
+		</a>
+	</p>
+</div>
+
 
 <form method="POST" action="/dados-externos-reuniao?id={{.Reuniao.ID}}">
 
