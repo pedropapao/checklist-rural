@@ -447,199 +447,264 @@ const inicioHTML = `
 `
 
 const novaReuniaoHTML = `
-<h2>Nova reunião com produtor</h2>
+<h2>Nova reunião</h2>
+
+<div class="barra-acoes">
+	<a class="botao secundario" href="/reunioes">Voltar para reuniões</a>
+	<a class="botao secundario" href="/">Início</a>
+</div>
+
+<div class="card destaque">
+	<h3>Fluxo recomendado</h3>
+	<p class="pequeno">
+		Cadastre primeiro o essencial da reunião. Depois, na tela de detalhes, faça investigação, georreferenciamento, checklist e relatório.
+	</p>
+</div>
 
 <form method="POST" action="/salvar-reuniao">
-	<h3>Dados principais</h3>
+	<div class="card">
+		<h3>1. Produtor</h3>
+		<p class="pequeno">Dados básicos para identificar a reunião.</p>
 
-	<label>Nome do produtor</label>
-	<input type="text" name="produtor" required>
+		<label>Nome do produtor / cliente</label>
+		<input type="text" name="produtor" required placeholder="Ex: João da Silva ou Fazenda Santa Maria">
 
-	<label>Telefone / WhatsApp</label>
-	<input type="text" name="telefone">
+		<div class="grid">
+			<div>
+				<label>Telefone / WhatsApp</label>
+				<input type="text" name="telefone" placeholder="Ex: (99) 99999-9999">
+			</div>
 
-	<label>Município</label>
-	<input type="text" name="municipio">
+			<div>
+				<label>Município</label>
+				<input type="text" name="municipio" placeholder="Ex: Mongaguá">
+			</div>
 
-	<label>UF</label>
-	<input type="text" name="uf" maxlength="2">
+			<div>
+				<label>UF</label>
+				<input type="text" name="uf" maxlength="2" placeholder="Ex: SP">
+			</div>
+		</div>
+	</div>
 
-	<label>Banco pretendido</label>
-	<select name="banco">
-		<option value="Ainda não definido">Ainda não definido</option>
-		<option value="Banco do Brasil">Banco do Brasil</option>
-		<option value="Sicoob">Sicoob</option>
-	</select>
+	<div class="card">
+		<h3>2. Projeto</h3>
+		<p class="pequeno">Banco, atividade e finalidade do financiamento.</p>
 
-	<label>Tipo de projeto</label>
-	<select name="tipo_projeto">
-		<option value="Ainda não definido">Ainda não definido</option>
-		<option value="Custeio agrícola">Custeio agrícola</option>
-		<option value="Custeio pecuário">Custeio pecuário</option>
-		<option value="Investimento">Investimento</option>
-		<option value="Comercialização">Comercialização</option>
-		<option value="Industrialização">Industrialização</option>
-	</select>
+		<div class="grid">
+			<div>
+				<label>Banco</label>
+				<select name="banco">
+					<option value="">Selecione</option>
+					<option value="Banco do Brasil">Banco do Brasil</option>
+					<option value="Sicoob">Sicoob</option>
+					<option value="Outro">Outro</option>
+				</select>
+			</div>
 
-	<label>Atividade principal</label>
-	<select name="atividade">
-		<option value="Ainda não definida">Ainda não definida</option>
-		<option value="Agrícola">Agrícola</option>
-		<option value="Pecuária de corte">Pecuária de corte</option>
-		<option value="Pecuária de leite">Pecuária de leite</option>
-		<option value="Irrigação">Irrigação</option>
-		<option value="Máquinas e equipamentos">Máquinas e equipamentos</option>
-		<option value="Obras e benfeitorias">Obras e benfeitorias</option>
-		<option value="Outro">Outro</option>
-	</select>
+			<div>
+				<label>Tipo de projeto</label>
+				<select name="tipo_projeto">
+					<option value="">Selecione</option>
+					<option value="Custeio">Custeio</option>
+					<option value="Investimento">Investimento</option>
+					<option value="Custeio + Investimento">Custeio + Investimento</option>
+					<option value="Renegociação">Renegociação</option>
+					<option value="Outro">Outro</option>
+				</select>
+			</div>
 
-	<h3>Pré-análise do produtor e do projeto</h3>
+			<div>
+				<label>Atividade</label>
+				<input type="text" name="atividade" placeholder="Ex: soja, milho, pecuária, café, horticultura">
+			</div>
+		</div>
 
-<p class="pequeno">
-	Preencha esta parte conversando com o produtor. As respostas ajudam a classificar o caso, montar o checklist e futuramente sugerir possíveis linhas de crédito.
-</p>
+		<label>Finalidade do crédito</label>
+		<select name="finalidade_credito">
+			<option value="">Selecione</option>
+			<option value="Custeio agrícola">Custeio agrícola</option>
+			<option value="Custeio pecuário">Custeio pecuário</option>
+			<option value="Máquinas e implementos">Máquinas e implementos</option>
+			<option value="Benfeitorias">Benfeitorias</option>
+			<option value="Irrigação">Irrigação</option>
+			<option value="Armazenagem">Armazenagem</option>
+			<option value="Correção de solo">Correção de solo</option>
+			<option value="Outro">Outro</option>
+		</select>
+	</div>
 
-<div class="card">
-	<h4>1. Quem é o produtor?</h4>
+	<div class="card">
+		<h3>3. Pré-análise rápida</h3>
+		<p class="pequeno">
+			Esses dados ajudam o app a sugerir enquadramento, linha provável e pendências iniciais.
+		</p>
 
-	<label>Qual é a Receita Bruta Agropecuária Anual aproximada?</label>
-	<input type="text" name="renda_anual" placeholder="Ex: 500000,00">
+		<div class="grid">
+			<div>
+				<label>Renda bruta anual aproximada</label>
+				<input type="text" name="renda_anual" placeholder="Ex: 350.000,00">
+			</div>
 
-	<label class="check">
-		<input type="checkbox" name="possui_caf" value="sim">
-		O produtor possui CAF ativo para agricultura familiar?
-	</label>
+			<div>
+				<label>Valor pretendido</label>
+				<input type="text" name="valor_pretendido" placeholder="Ex: 150.000,00">
+			</div>
 
-	<p class="pequeno">
-		Essa etapa ajuda a separar se o produtor pode caminhar para agricultura familiar, médio produtor ou outro enquadramento.
-	</p>
-</div>
+			<div>
+				<label>Possui CAF?</label>
+				<select name="possui_caf">
+					<option value="nao">Não</option>
+					<option value="sim">Sim</option>
+					<option value="nao_sabe">Não sabe</option>
+				</select>
+			</div>
 
-<div class="card">
-	<h4>2. O que o produtor quer financiar?</h4>
+			<div>
+				<label>Já tem orçamento?</label>
+				<select name="tem_orcamento">
+					<option value="nao">Não</option>
+					<option value="sim">Sim</option>
+					<option value="parcial">Parcial</option>
+				</select>
+			</div>
+		</div>
+	</div>
 
-	<label>Qual é a finalidade principal do crédito?</label>
-	<select name="finalidade_credito">
-		<option value="">Selecione</option>
-		<option value="Custeio agrícola">Custeio agrícola / safra</option>
-		<option value="Custeio pecuário">Custeio pecuário / animais</option>
-		<option value="Investimento">Investimento na propriedade</option>
-		<option value="Máquinas e equipamentos">Máquinas e equipamentos</option>
-		<option value="Obras e benfeitorias">Obras, construção ou benfeitorias</option>
-		<option value="Irrigação">Irrigação ou uso de água</option>
-	</select>
+	<div class="card">
+		<h3>4. Situação inicial</h3>
+		<p class="pequeno">
+			Marque o que já sabe. O restante pode ser completado depois na investigação.
+		</p>
 
-	<label>Qual valor aproximado o produtor pretende financiar?</label>
-	<input type="text" name="valor_pretendido" placeholder="Ex: 250000,00">
+		<div class="grid">
+			<div>
+				<label>Cadastro no banco</label>
+				<select name="cadastro_banco">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-	<label class="check">
-		<input type="checkbox" name="tem_orcamento" value="sim">
-		O produtor já tem orçamento, proposta comercial ou valor definido?
-	</label>
+			<div>
+				<label>Financiamento ativo</label>
+				<select name="financiamento_ativo">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-	<p class="pequeno">
-		Aqui você identifica se a demanda é custeio, investimento, máquina, obra, irrigação ou pecuária.
-	</p>
-</div>
+			<div>
+				<label>Restrição cadastral</label>
+				<select name="restricao_cadastral">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
+		</div>
 
-<div class="card">
-	<h4>3. Relação com o banco</h4>
+		<div class="grid">
+			<div>
+				<label>Imóvel próprio</label>
+				<select name="imovel_proprio">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-	<label class="check">
-		<input type="checkbox" name="cadastro_banco" value="sim">
-		O produtor já tem cadastro nesse banco ou cooperativa?
-	</label>
+			<div>
+				<label>Imóvel arrendado</label>
+				<select name="imovel_arrendado">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-	<label class="check">
-		<input type="checkbox" name="financiamento_ativo" value="sim">
-		O produtor possui financiamento rural ativo hoje?
-	</label>
+			<div>
+				<label>Tem CAR?</label>
+				<select name="tem_car">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
+		</div>
 
-	<label class="check">
-		<input type="checkbox" name="restricao_cadastral" value="sim">
-		Existe alguma restrição ou pendência no CPF/CNPJ que ele saiba?
-	</label>
+		<div class="grid">
+			<div>
+				<label>Usa água / irrigação?</label>
+				<select name="usa_agua">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-	<p class="pequeno">
-		Essa parte ajuda a saber se o projeto pode andar ou se primeiro será necessário resolver cadastro, limite ou pendência.
-	</p>
-</div>
+			<div>
+				<label>Tem pecuária?</label>
+				<select name="tem_pecuaria">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-<div class="card">
-	<h4>4. Situação da terra</h4>
+			<div>
+				<label>Tem obra / construção?</label>
+				<select name="tem_obra">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
+		</div>
 
-	<label class="check">
-		<input type="checkbox" name="imovel_proprio" value="sim">
-		A área onde será feito o projeto é própria?
-	</label>
+		<div class="grid">
+			<div>
+				<label>Tem investimento?</label>
+				<select name="tem_investimento">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-	<label class="check">
-		<input type="checkbox" name="imovel_arrendado" value="sim">
-		A área é arrendada, parceria ou comodato?
-	</label>
+			<div>
+				<label>Supressão vegetal?</label>
+				<select name="tem_supressao">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
 
-	<label class="check">
-		<input type="checkbox" name="tem_car" value="sim">
-		A propriedade já possui CAR?
-	</label>
+			<div>
+				<label>Precisa ZARC?</label>
+				<select name="precisa_zarc">
+					<option value="nao_sabe">Não sabe</option>
+					<option value="sim">Sim</option>
+					<option value="nao">Não</option>
+				</select>
+			</div>
+		</div>
+	</div>
 
-	<p class="pequeno">
-		Se a área não for própria, o checklist vai precisar considerar contrato, anuência e autorização do proprietário.
-	</p>
-</div>
+	<div class="card">
+		<h3>5. Observações</h3>
 
-<div class="card">
-	<h4>5. Ambiental e uso da água</h4>
+		<label>Anotações da reunião</label>
+		<textarea name="observacoes" rows="6" placeholder="Ex: produtor trouxe CAR, precisa orçamento, imóvel arrendado, banco solicitado, pendências iniciais"></textarea>
+	</div>
 
-	<label class="check">
-		<input type="checkbox" name="usa_agua" value="sim">
-		O projeto vai usar água, poço, represa, rio, córrego ou irrigação?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" name="tem_supressao" value="sim">
-		Vai precisar abrir área, retirar vegetação ou limpar vegetação nativa?
-	</label>
-
-	<p class="pequeno">
-		Essa etapa aponta riscos ambientais que podem exigir outorga, dispensa, licença ou autorização.
-	</p>
-</div>
-
-<div class="card">
-	<h4>6. Pontos técnicos do projeto</h4>
-
-	<label class="check">
-		<input type="checkbox" name="tem_pecuaria" value="sim">
-		O projeto envolve pecuária, rebanho, pastagem, leite ou corte?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" name="tem_investimento" value="sim">
-		O projeto envolve compra, melhoria, estrutura ou investimento na propriedade?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" name="tem_obra" value="sim">
-		O projeto envolve obra, construção, reforma, curral, barracão ou benfeitoria?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" name="precisa_zarc" value="sim">
-		É lavoura/custeio agrícola e precisa conferir ZARC?
-	</label>
-
-	<p class="pequeno">
-		Essas respostas definem quais blocos entram no checklist técnico.
-	</p>
-</div>
-
-<label>Observações iniciais</label>
-	<textarea name="observacoes"></textarea>
-
-	<br><br>
-	<button type="submit">Salvar reunião</button>
-	<a class="botao secundario" href="/">Voltar</a>
+	<div class="card">
+		<button type="submit">Salvar reunião</button>
+		<a class="botao secundario" href="/reunioes">Cancelar</a>
+	</div>
 </form>
 `
 

@@ -337,21 +337,19 @@ func (app *App) processarUploadGeoref(w http.ResponseWriter, r *http.Request, re
 }
 
 const georreferenciamentoHTML = `
-<h2>Georreferenciamento da reunião</h2>
+<h2>Georreferenciamento</h2>
 
-<p class="pequeno">
-	Reunião: <strong>{{.Reuniao.Produtor}}</strong> — {{.Reuniao.Municipio}}/{{.Reuniao.UF}}
-</p>
+<div class="barra-acoes">
+	<a class="botao secundario" href="/investigacao?id={{.Reuniao.ID}}">Voltar para investigação</a>
+	<a class="botao secundario" href="/detalhes?id={{.Reuniao.ID}}">Voltar para detalhes</a>
+</div>
 
-<p>
-	<a class="botao secundario" href="/dados-externos-reuniao?id={{.Reuniao.ID}}">
-		Voltar para investigação online
-	</a>
-
-	<a class="botao secundario" href="/detalhes?id={{.Reuniao.ID}}">
-		Voltar para detalhes
-	</a>
-</p>
+<div class="card destaque">
+	<h3>{{.Reuniao.Produtor}}</h3>
+	<p class="pequeno">
+		{{.Reuniao.Municipio}}/{{.Reuniao.UF}} — {{.Reuniao.Banco}} — {{.Reuniao.Atividade}}
+	</p>
+</div>
 
 {{if .Mensagem}}
 <div class="card destaque">
@@ -359,24 +357,41 @@ const georreferenciamentoHTML = `
 </div>
 {{end}}
 
-<div class="card">
-	<h3>Importar arquivo georreferenciado</h3>
+<div class="grid">
+	<div class="card">
+		<h3>Importar localização da área</h3>
+		<p class="pequeno">
+			Anexe KML, KMZ, GeoJSON, shapefile, croqui, planta, PDF ou ZIP.
+			O sistema guarda tudo dentro da pasta da reunião.
+		</p>
 
-	<p class="pequeno">
-		Formatos aceitos: KML, KMZ, GeoJSON, GPX, CSV, SHP, DBF, SHX, PRJ, PDF e ZIP.
-	</p>
+		<form method="POST" action="/georreferenciamento?id={{.Reuniao.ID}}" enctype="multipart/form-data">
+			<input type="hidden" name="acao" value="upload">
 
-	<form method="POST" action="/georreferenciamento?id={{.Reuniao.ID}}" enctype="multipart/form-data">
-		<input type="hidden" name="acao" value="upload">
+			<label>Arquivo</label>
+			<input type="file" name="arquivo" required>
 
-		<label>Arquivo</label>
-		<input type="file" name="arquivo" required>
+			<label>Observação</label>
+			<textarea name="observacao" rows="4" placeholder="Ex: área do projeto, talhão soja, croqui do produtor, planta do imóvel, arquivo do CAR"></textarea>
 
-		<label>Observação</label>
-		<textarea name="observacao" rows="3" placeholder="Ex: talhão soja, área do projeto, mapa do CAR, planta do imóvel"></textarea>
+			<button type="submit">Importar arquivo</button>
+		</form>
+	</div>
 
-		<button type="submit">Importar arquivo</button>
-	</form>
+	<div class="card alerta">
+		<h3>O que devo anexar?</h3>
+		<p class="pequeno">
+			Use qualquer documento que ajude a localizar a área financiada.
+		</p>
+
+		<ul>
+			<li>KML/KMZ do CAR ou talhão</li>
+			<li>GeoJSON ou shapefile</li>
+			<li>PDF de planta/croqui</li>
+			<li>Mapa enviado pelo produtor</li>
+			<li>ZIP com arquivos geográficos</li>
+		</ul>
+	</div>
 </div>
 
 <div class="card">
@@ -387,24 +402,24 @@ const georreferenciamentoHTML = `
 		<thead>
 			<tr>
 				<th>Tipo</th>
-				<th>Arquivo original</th>
+				<th>Arquivo</th>
 				<th>Data</th>
-				<th>Observação</th>
+				<th>Observação / leitura automática</th>
 				<th>Ação</th>
 			</tr>
 		</thead>
 		<tbody>
 			{{range .Arquivos}}
 			<tr>
-				<td>{{.Tipo}}</td>
+				<td><span class="badge">{{.Tipo}}</span></td>
 				<td>{{.NomeOriginal}}</td>
 				<td>{{.CriadoEm}}</td>
-				<td>{{.Observacao}}</td>
+				<td><pre>{{.Observacao}}</pre></td>
 				<td>
 					<form method="POST" action="/georreferenciamento?id={{$.Reuniao.ID}}" onsubmit="return confirm('Excluir este arquivo?')">
 						<input type="hidden" name="acao" value="excluir">
 						<input type="hidden" name="arquivo_id" value="{{.ID}}">
-						<button type="submit">Excluir</button>
+						<button type="submit" class="perigo">Excluir</button>
 					</form>
 				</td>
 			</tr>
@@ -412,14 +427,20 @@ const georreferenciamentoHTML = `
 		</tbody>
 	</table>
 	{{else}}
-	<p class="pequeno">Nenhum arquivo georreferenciado importado ainda.</p>
+	<div class="card alerta">
+		<h3>Nenhum arquivo importado ainda</h3>
+		<p>
+			Importe pelo menos um arquivo de localização antes de fechar a investigação do projeto.
+		</p>
+	</div>
 	{{end}}
 </div>
 
 <div class="card">
-	<h3>Próxima evolução</h3>
+	<h3>Próxima conferência</h3>
 	<p class="pequeno">
-		Depois vamos fazer o app ler KML/GeoJSON para identificar pontos, linhas, polígonos, nomes das áreas e possíveis coordenadas.
+		Depois de importar, confira se o arquivo corresponde ao imóvel, CAR, talhão, gleba ou área financiada.
+		Se o produtor não tiver arquivo geográfico, anexe ao menos croqui, planta ou PDF de localização.
 	</p>
 </div>
 `
