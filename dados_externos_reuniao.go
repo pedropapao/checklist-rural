@@ -478,6 +478,10 @@ const dadosExternosReuniaoHTML = `
 
 <p>
 	<a class="botao secundario" href="/detalhes?id={{.Reuniao.ID}}">Voltar para detalhes</a>
+
+	<a class="botao" href="/georreferenciamento?id={{.Reuniao.ID}}">
+		Georreferenciamento
+	</a>
 </p>
 
 {{if .Resultado.Tipo}}
