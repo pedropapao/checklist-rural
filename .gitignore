@@ -31,3 +31,8 @@ Thumbs.db
 config.env
 *.env
 Documentos/ChecklistRural/config.env
+
+# Temporários extras
+*.bak_*
+*.tmp
+*.old
