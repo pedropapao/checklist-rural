@@ -67,6 +67,7 @@ func main() {
 
 	http.HandleFunc("/configuracoes-api", app.telaConfiguracoesAPI)
 	http.HandleFunc("/consultas-externas", app.telaConsultasExternas)
+	http.HandleFunc("/investigacao", app.painelInvestigacao)
 	http.HandleFunc("/dados-externos-reuniao", app.telaDadosExternosReuniao)
 	http.HandleFunc("/georreferenciamento", app.telaGeorreferenciamento)
 	http.HandleFunc("/relatorio", app.telaRelatorioPreAnalise)

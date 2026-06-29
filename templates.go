@@ -1024,7 +1024,7 @@ const detalhesReuniaoModernoHTML = `
 		<div class="card">
 			<h3>1. Investigação</h3>
 			<p class="pequeno">CNPJ, CEP, CAR, imóvel, Ibama, CEIS/CNEP, SIGEF/SNCR e fontes.</p>
-			<a class="botao" href="/dados-externos-reuniao?id={{.Reuniao.ID}}">Abrir investigação</a>
+			<a class="botao" href="/investigacao?id={{.Reuniao.ID}}">Abrir investigação</a>
 		</div>
 
 		<div class="card">
