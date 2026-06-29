@@ -799,6 +799,14 @@ const detalhesHTML = `
 	</a>
 </p>
 
+<p>
+	<a class="botao" href="/dados-externos-reuniao?id={{.Reuniao.ID}}">
+		Dados externos do produtor/imóvel
+	</a>
+</p>
+
+
+
 <h3>Pré-análise do produtor e do projeto</h3>
 
 <p class="pequeno">

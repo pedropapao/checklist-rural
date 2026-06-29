@@ -44,6 +44,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	err = app.criarTabelaDadosExternos()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = app.corrigirClassificacaoReunioesAntigas()
 	if err != nil {
 		log.Fatal(err)
@@ -56,6 +61,7 @@ func main() {
 
 	http.HandleFunc("/", app.telaInicial)
 	http.HandleFunc("/consultas-externas", app.telaConsultasExternas)
+	http.HandleFunc("/dados-externos-reuniao", app.telaDadosExternosReuniao)
 	http.HandleFunc("/relatorio", app.telaRelatorioPreAnalise)
 	http.HandleFunc("/nova-reuniao", app.telaNovaReuniao)
 	http.HandleFunc("/salvar-reuniao", app.salvarReuniao)
