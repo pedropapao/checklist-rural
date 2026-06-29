@@ -976,316 +976,147 @@ const confirmarExcluirHTML = `
 const detalhesReuniaoModernoHTML = `
 <h2>Detalhes da reunião</h2>
 
-<a class="botao secundario" href="/reunioes">Voltar para reuniões</a>
-<a class="botao alerta" href="/editar-reuniao?id={{.Reuniao.ID}}">Editar reunião</a>
-<a class="botao perigo" href="/confirmar-excluir?id={{.Reuniao.ID}}">Excluir reunião</a>
-<a class="botao" href="/checklist?id={{.Reuniao.ID}}">Gerar checklist</a>
-<a class="botao" href="/checklist-controle?id={{.Reuniao.ID}}">Controlar checklist</a>
-<a class="botao alerta" href="/whatsapp?id={{.Reuniao.ID}}">Resumo WhatsApp</a>
-<a class="botao alerta" href="/whatsapp-pendencias?id={{.Reuniao.ID}}">WhatsApp pendências</a>
-<a class="botao secundario" href="/exportar-checklist-txt?id={{.Reuniao.ID}}">Exportar TXT</a>
-<a class="botao" href="/exportar-checklist-controle-txt?id={{.Reuniao.ID}}">Exportar controle TXT</a>
-
-<div class="card">
-	<h3>Produtor</h3>
-	<p><strong>Nome:</strong> {{.Reuniao.Produtor}}</p>
-	<p><strong>Telefone/WhatsApp:</strong> {{.Reuniao.Telefone}}</p>
-	<p><strong>Município/UF:</strong> {{.Reuniao.Municipio}}/{{.Reuniao.UF}}</p>
-	<p><strong>Data da reunião:</strong> {{.Reuniao.CriadoEm}}</p>
+<div class="barra-acoes">
+	<a class="botao secundario" href="/reunioes">Voltar</a>
+	<a class="botao secundario" href="/editar-reuniao?id={{.Reuniao.ID}}">Editar</a>
+	<a class="botao perigo" href="/confirmar-excluir?id={{.Reuniao.ID}}">Excluir</a>
 </div>
 
-<div class="card">
-	<h3>Projeto pretendido</h3>
-	<p><strong>Banco:</strong> {{.Reuniao.Banco}}</p>
-	<p><strong>Tipo de projeto:</strong> {{.Reuniao.TipoProjeto}}</p>
-	<p><strong>Atividade:</strong> {{.Reuniao.Atividade}}</p>
-	<p><strong>Renda anual:</strong> R$ {{printf "%.2f" .Reuniao.RendaAnual}}</p>
-	<p><strong>Classificação:</strong> {{.Reuniao.ClassificacaoProdutor}}</p>
-</div>
+<div class="grid">
+	<div class="card destaque">
+		<h3>Produtor</h3>
+		<p class="pequeno">Dados principais da reunião.</p>
 
-<div class="card">
-	<h3>Resumo do andamento</h3>
+		<p><strong>Nome:</strong> {{.Reuniao.Produtor}}</p>
+		<p><strong>Telefone:</strong> {{.Reuniao.Telefone}}</p>
+		<p><strong>Município/UF:</strong> {{.Reuniao.Municipio}}/{{.Reuniao.UF}}</p>
+		<p><strong>Data:</strong> {{.Reuniao.CriadoEm}}</p>
+	</div>
 
-	<div class="grid">
-		<div>
-			<strong>Total de itens:</strong><br>
-			{{.Resumo.Total}}
-		</div>
+	<div class="card">
+		<h3>Projeto</h3>
+		<p class="pequeno">Resumo da intenção de financiamento.</p>
 
-		<div>
-			<strong>Concluído:</strong><br>
-			{{.Resumo.PercentualConcluido}}%
-		</div>
+		<p><strong>Banco:</strong> {{.Reuniao.Banco}}</p>
+		<p><strong>Tipo:</strong> {{.Reuniao.TipoProjeto}}</p>
+		<p><strong>Atividade:</strong> {{.Reuniao.Atividade}}</p>
+		<p><strong>Finalidade:</strong> {{.Reuniao.FinalidadeCredito}}</p>
+	</div>
 
-		<div>
-			<strong>Pendentes:</strong><br>
-			{{.Resumo.Pendentes}}
-		</div>
+	<div class="card">
+		<h3>Enquadramento</h3>
+		<p class="pequeno">Classificação inicial do produtor.</p>
 
-		<div>
-			<strong>Recebidos:</strong><br>
-			{{.Resumo.Recebidos}}
-		</div>
-
-		<div>
-			<strong>Não se aplica:</strong><br>
-			{{.Resumo.NaoSeAplica}}
-		</div>
+		<p><strong>Renda anual:</strong> R$ {{printf "%.2f" .Reuniao.RendaAnual}}</p>
+		<p><strong>Classificação:</strong> <span class="badge">{{.Reuniao.ClassificacaoProdutor}}</span></p>
+		<p><strong>Possui CAF:</strong> {{.Reuniao.PossuiCAF}}</p>
+		<p><strong>Valor pretendido:</strong> R$ {{printf "%.2f" .Reuniao.ValorPretendido}}</p>
 	</div>
 </div>
 
 <div class="card">
-	
-<p>
-	<a class="botao" href="/relatorio?id={{.Reuniao.ID}}" target="_blank">
-		Exportar relatório da pré-análise
-	</a>
-</p>
-
-<p>
-	<a class="botao" href="/dados-externos-reuniao?id={{.Reuniao.ID}}">
-		Dados externos do produtor/imóvel
-	</a>
-</p>
-
-
-
-<h3>Pré-análise do produtor e do projeto</h3>
-
-<p class="pequeno">
-	Preencha esta parte conversando com o produtor. As respostas ajudam a classificar o caso, montar o checklist e futuramente sugerir possíveis linhas de crédito.
-</p>
-
-<div class="card">
-	<h4>1. Quem é o produtor?</h4>
-
-	<label>Qual é a Receita Bruta Agropecuária Anual aproximada?</label>
-	<input type="text" name="renda_anual" readonly value="{{printf "%.2f" .Reuniao.RendaAnual}}" placeholder="Ex: 500000,00">
-
-	<label class="check">
-		<input type="checkbox" disabled name="possui_caf" value="sim" {{if eq .Reuniao.PossuiCAF "sim"}}checked{{end}}>
-		O produtor possui CAF ativo para agricultura familiar?
-	</label>
-
+	<h3>Fluxo da análise</h3>
 	<p class="pequeno">
-		Essa etapa ajuda a separar se o produtor pode caminhar para agricultura familiar, médio produtor ou outro enquadramento.
-	</p>
-</div>
-
-<div class="card">
-	<h4>2. O que o produtor quer financiar?</h4>
-
-	<label>Qual é a finalidade principal do crédito?</label>
-	<select name="finalidade_credito" disabled>
-		<option value="">Selecione</option>
-		<option value="Custeio agrícola" {{if eq .Reuniao.FinalidadeCredito "Custeio agrícola"}}selected{{end}}>Custeio agrícola / safra</option>
-		<option value="Custeio pecuário" {{if eq .Reuniao.FinalidadeCredito "Custeio pecuário"}}selected{{end}}>Custeio pecuário / animais</option>
-		<option value="Investimento" {{if eq .Reuniao.FinalidadeCredito "Investimento"}}selected{{end}}>Investimento na propriedade</option>
-		<option value="Máquinas e equipamentos" {{if eq .Reuniao.FinalidadeCredito "Máquinas e equipamentos"}}selected{{end}}>Máquinas e equipamentos</option>
-		<option value="Obras e benfeitorias" {{if eq .Reuniao.FinalidadeCredito "Obras e benfeitorias"}}selected{{end}}>Obras, construção ou benfeitorias</option>
-		<option value="Irrigação" {{if eq .Reuniao.FinalidadeCredito "Irrigação"}}selected{{end}}>Irrigação ou uso de água</option>
-	</select>
-
-	<label>Qual valor aproximado o produtor pretende financiar?</label>
-	<input type="text" name="valor_pretendido" readonly value="{{printf "%.2f" .Reuniao.ValorPretendido}}" placeholder="Ex: 250000,00">
-
-	<label class="check">
-		<input type="checkbox" disabled name="tem_orcamento" value="sim" {{if eq .Reuniao.TemOrcamento "sim"}}checked{{end}}>
-		O produtor já tem orçamento, proposta comercial ou valor definido?
-	</label>
-
-	<p class="pequeno">
-		Aqui você identifica se a demanda é custeio, investimento, máquina, obra, irrigação ou pecuária.
-	</p>
-</div>
-
-<div class="card">
-	<h4>3. Relação com o banco</h4>
-
-	<label class="check">
-		<input type="checkbox" disabled name="cadastro_banco" value="sim" {{if eq .Reuniao.CadastroBanco "sim"}}checked{{end}}>
-		O produtor já tem cadastro nesse banco ou cooperativa?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="financiamento_ativo" value="sim" {{if eq .Reuniao.FinanciamentoAtivo "sim"}}checked{{end}}>
-		O produtor possui financiamento rural ativo hoje?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="restricao_cadastral" value="sim" {{if eq .Reuniao.RestricaoCadastral "sim"}}checked{{end}}>
-		Existe alguma restrição ou pendência no CPF/CNPJ que ele saiba?
-	</label>
-
-	<p class="pequeno">
-		Essa parte ajuda a saber se o projeto pode andar ou se primeiro será necessário resolver cadastro, limite ou pendência.
-	</p>
-</div>
-
-<div class="card">
-	<h4>4. Situação da terra</h4>
-
-	<label class="check">
-		<input type="checkbox" disabled name="imovel_proprio" value="sim" {{if eq .Reuniao.ImovelProprio "sim"}}checked{{end}}>
-		A área onde será feito o projeto é própria?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="imovel_arrendado" value="sim" {{if eq .Reuniao.ImovelArrendado "sim"}}checked{{end}}>
-		A área é arrendada, parceria ou comodato?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="tem_car" value="sim" {{if eq .Reuniao.TemCAR "sim"}}checked{{end}}>
-		A propriedade já possui CAR?
-	</label>
-
-	<p class="pequeno">
-		Se a área não for própria, o checklist vai precisar considerar contrato, anuência e autorização do proprietário.
-	</p>
-</div>
-
-<div class="card">
-	<h4>5. Ambiental e uso da água</h4>
-
-	<label class="check">
-		<input type="checkbox" disabled name="usa_agua" value="sim" {{if eq .Reuniao.UsaAgua "sim"}}checked{{end}}>
-		O projeto vai usar água, poço, represa, rio, córrego ou irrigação?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="tem_supressao" value="sim" {{if eq .Reuniao.TemSupressao "sim"}}checked{{end}}>
-		Vai precisar abrir área, retirar vegetação ou limpar vegetação nativa?
-	</label>
-
-	<p class="pequeno">
-		Essa etapa aponta riscos ambientais que podem exigir outorga, dispensa, licença ou autorização.
-	</p>
-</div>
-
-<div class="card">
-	<h4>6. Pontos técnicos do projeto</h4>
-
-	<label class="check">
-		<input type="checkbox" disabled name="tem_pecuaria" value="sim" {{if eq .Reuniao.TemPecuaria "sim"}}checked{{end}}>
-		O projeto envolve pecuária, rebanho, pastagem, leite ou corte?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="tem_investimento" value="sim" {{if eq .Reuniao.TemInvestimento "sim"}}checked{{end}}>
-		O projeto envolve compra, melhoria, estrutura ou investimento na propriedade?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="tem_obra" value="sim" {{if eq .Reuniao.TemObra "sim"}}checked{{end}}>
-		O projeto envolve obra, construção, reforma, curral, barracão ou benfeitoria?
-	</label>
-
-	<label class="check">
-		<input type="checkbox" disabled name="precisa_zarc" value="sim" {{if eq .Reuniao.PrecisaZARC "sim"}}checked{{end}}>
-		É lavoura/custeio agrícola e precisa conferir ZARC?
-	</label>
-
-	<p class="pequeno">
-		Essas respostas definem quais blocos entram no checklist técnico.
-	</p>
-</div>
-
-
-{{if .Leitura}}
-<div class="card destaque">
-	<h3>Leitura inicial da pré-análise</h3>
-
-	<p class="pequeno">
-		Esta leitura é uma orientação interna para organizar o atendimento. A confirmação final depende dos documentos, cadastro, normas do banco e análise da operação.
+		Siga a ordem abaixo para manter o projeto organizado.
 	</p>
 
 	<div class="grid">
 		<div class="card">
-			<h4>Enquadramento provável</h4>
-			<p><strong>{{.Leitura.Enquadramento}}</strong></p>
+			<h3>1. Investigação</h3>
+			<p class="pequeno">CNPJ, CEP, CAR, imóvel, Ibama, CEIS/CNEP, SIGEF/SNCR e fontes.</p>
+			<a class="botao" href="/dados-externos-reuniao?id={{.Reuniao.ID}}">Abrir investigação</a>
 		</div>
 
 		<div class="card">
-			<h4>Caminho inicial</h4>
-			<p>{{.Leitura.Caminho}}</p>
+			<h3>2. Georreferenciamento</h3>
+			<p class="pequeno">KML, KMZ, GeoJSON, shapefile, PDF, croqui ou planta.</p>
+
+			{{if .ResumoGeoref.Total}}
+				<p><strong>Arquivos:</strong> {{.ResumoGeoref.Total}}</p>
+			{{else}}
+				<p class="pequeno">Nenhum arquivo importado ainda.</p>
+			{{end}}
+
+			<a class="botao" href="/georreferenciamento?id={{.Reuniao.ID}}">Abrir georreferenciamento</a>
+		</div>
+
+		<div class="card">
+			<h3>3. Relatório</h3>
+			<p class="pequeno">Gere a pré-análise para imprimir ou salvar em PDF.</p>
+			<a class="botao" href="/relatorio?id={{.Reuniao.ID}}" target="_blank">Abrir relatório</a>
 		</div>
 	</div>
+</div>
 
-	{{if .Leitura.Resumo}}
-	<div class="card">
-		<h4>Resumo da demanda</h4>
-		<p>{{.Leitura.Resumo}}</p>
+<div class="card">
+	<h3>Ações rápidas</h3>
+
+	<div class="barra-acoes">
+		<a class="botao secundario" href="/whatsapp?id={{.Reuniao.ID}}">Resumo WhatsApp</a>
+		<a class="botao secundario" href="/whatsapp-pendencias?id={{.Reuniao.ID}}">WhatsApp pendências</a>
+		<a class="botao secundario" href="/exportar-checklist-txt?id={{.Reuniao.ID}}">Exportar TXT</a>
+		<a class="botao secundario" href="/exportar-checklist-controle-txt?id={{.Reuniao.ID}}">Exportar controle TXT</a>
 	</div>
-	{{end}}
+</div>
 
+{{if .ResumoGeoref.Total}}
+<div class="card">
+	<h3>Arquivos georreferenciados</h3>
 
-{{if .LinhasBB}}
-<div class="card destaque">
-	<h3>Possíveis linhas BB</h3>
-
-	<p class="pequeno">
-		Sugestão inicial gerada a partir da pré-análise. Não substitui o enquadramento oficial, a análise cadastral, a política vigente do banco nem a conferência documental.
-	</p>
-
-	{{range .LinhasBB}}
-	<div class="card">
-		<h4>{{.Nome}}</h4>
-		<p><strong>Motivo:</strong> {{.Motivo}}</p>
-		<p><strong>Atenção:</strong> {{.Atencao}}</p>
-	</div>
-	{{end}}
-
-
-
-
-
+	<table>
+		<thead>
+			<tr>
+				<th>Tipo</th>
+				<th>Arquivo</th>
+				<th>Data</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{range .ResumoGeoref.Arquivos}}
+			<tr>
+				<td>{{.Tipo}}</td>
+				<td>{{.NomeOriginal}}</td>
+				<td>{{.CriadoEm}}</td>
+			</tr>
+			{{end}}
+		</tbody>
+	</table>
 </div>
 {{end}}
 
+<div class="card">
+	<h3>Leitura inicial</h3>
 
+	<p><strong>Enquadramento:</strong> {{.Leitura.Enquadramento}}</p>
+	<p><strong>Caminho sugerido:</strong> {{.Leitura.Caminho}}</p>
 
-	<div class="card">
-		<h4>Atenções identificadas</h4>
+	{{if .Leitura.Alertas}}
+		<h3>Alertas</h3>
 		<ul>
 			{{range .Leitura.Alertas}}
-			<li>{{.}}</li>
+				<li>{{.}}</li>
 			{{end}}
 		</ul>
-	</div>
+	{{end}}
 
-	<div class="card">
-		<h4>Próximos passos sugeridos</h4>
+	{{if .Leitura.ProximosPassos}}
+		<h3>Próximos passos</h3>
 		<ul>
 			{{range .Leitura.ProximosPassos}}
-			<li>{{.}}</li>
+				<li>{{.}}</li>
 			{{end}}
 		</ul>
-	</div>
-</div>
-{{end}}
-
-
-{{if .LinhasSicoob}}
-<div class="card destaque">
-	<h3>Possíveis caminhos Sicoob</h3>
-
-	<p class="pequeno">
-		Sugestão inicial gerada a partir da pré-análise e das soluções agro do Sicoob. Não substitui o enquadramento oficial, a análise da cooperativa, a política vigente nem a conferência documental.
-	</p>
-
-	{{range .LinhasSicoob}}
-	<div class="card">
-		<h4>{{.Nome}}</h4>
-		<p><strong>Motivo:</strong> {{.Motivo}}</p>
-		<p><strong>Atenção:</strong> {{.Atencao}}</p>
-	</div>
 	{{end}}
 </div>
-{{end}}
 
-<h3>Observações da reunião</h3>
-	<p>{{.Reuniao.Observacoes}}</p>
+<div class="card">
+	<h3>Observações</h3>
+
+	{{if .Reuniao.Observacoes}}
+		<p>{{.Reuniao.Observacoes}}</p>
+	{{else}}
+		<p class="pequeno">Nenhuma observação registrada.</p>
+	{{end}}
 </div>
 `
 
