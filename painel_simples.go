@@ -154,12 +154,12 @@ const painelSimplesHTML = `
 <body>
 	<header>
 		<h1>Checklist Rural</h1>
-		<p>Sistema pessoal para organizar reunião, investigação, pré-análise, checklist e relatório de projeto rural.</p>
+		<p>Organize projetos rurais do começo ao relatório: reunião, investigação, georreferenciamento e pré-análise.</p>
 	</header>
 
 	<main>
 		<section class="secao">
-			<h2>Começar</h2>
+			<h2>Fluxo principal</h2>
 
 			<div class="grid">
 				<div class="card">
@@ -175,8 +175,8 @@ const painelSimplesHTML = `
 				</div>
 
 				<div class="card">
-					<h3>Investigação rápida</h3>
-					<p>Use consultas externas, CNPJ, CEP, CAR, Ibama e georreferenciamento.</p>
+					<h3>Continuar análise</h3>
+					<p>Escolha uma reunião e siga para investigação, georreferenciamento ou relatório.</p>
 					<a class="botao secundario" href="/reunioes">Escolher reunião</a>
 				</div>
 			</div>
@@ -212,8 +212,8 @@ const painelSimplesHTML = `
 		<section class="secao">
 			<div class="aviso">
 				<strong>Fluxo recomendado:</strong>
-				crie a reunião, faça a investigação do produtor/imóvel, importe documentos/georreferenciamento,
-				revise o checklist e só depois gere o relatório da pré-análise.
+				crie a reunião, faça a investigação do produtor/imóvel, importe documentos e georreferenciamento,
+				e depois gere o relatório da pré-análise.
 			</div>
 		</section>
 	</main>

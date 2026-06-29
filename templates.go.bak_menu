@@ -472,53 +472,6 @@ hr {
 	margin: 22px 0;
 }
 
-
-/* CORRECAO MENU UNICO */
-.topo-sistema {
-	background: linear-gradient(135deg, #1f7a4d, #145c38) !important;
-	color: white !important;
-	padding: 14px 24px !important;
-	margin-bottom: 24px !important;
-}
-
-.topo-sistema .topo-conteudo {
-	max-width: 1180px !important;
-	margin: 0 auto !important;
-	display: flex !important;
-	align-items: center !important;
-	justify-content: space-between !important;
-	gap: 16px !important;
-	flex-wrap: wrap !important;
-}
-
-.topo-sistema strong {
-	font-size: 20px !important;
-	color: white !important;
-}
-
-.topo-sistema nav {
-	display: flex !important;
-	gap: 8px !important;
-	flex-wrap: wrap !important;
-	background: transparent !important;
-	padding: 0 !important;
-	margin: 0 !important;
-}
-
-.topo-sistema nav a {
-	color: white !important;
-	text-decoration: none !important;
-	background: rgba(255,255,255,0.14) !important;
-	padding: 8px 12px !important;
-	border-radius: 9px !important;
-	font-size: 13px !important;
-	font-weight: bold !important;
-}
-
-.topo-sistema nav a:hover {
-	background: rgba(255,255,255,0.25) !important;
-}
-
 </style>
 </head>
 <body>
@@ -538,7 +491,10 @@ hr {
 	</div>
 </div>
 
-	
+	<header>
+		<h1>Checklist Rural</h1>
+		<p>Atendimento, triagem e checklist para reunião com produtor</p>
+	</header>
 
 	<nav>
 		<a href="/">Início</a>
