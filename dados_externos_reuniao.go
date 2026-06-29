@@ -400,6 +400,37 @@ func (app *App) telaDadosExternosReuniao(w http.ResponseWriter, r *http.Request)
 				dados.UltimaInvestigacaoOnline = time.Now().Format("02/01/2006 15:04")
 				_ = app.salvarDadosExternos(dados)
 			}
+
+		case "consultar_ceis_cnep":
+			ceis := consultarCEISPortalTransparencia(dados.CNPJ)
+			cnep := consultarCNEPPortalTransparencia(dados.CNPJ)
+
+			if ceis.Encontrou {
+				dados.CEISStatus = "sim"
+			} else {
+				dados.CEISStatus = "nao"
+			}
+			dados.CEISDetalhes = ceis.Resumo
+
+			if cnep.Encontrou {
+				dados.CNEPStatus = "sim"
+			} else {
+				dados.CNEPStatus = "nao"
+			}
+			dados.CNEPDetalhes = cnep.Resumo
+
+			dados.FonteConsulta = "Portal da Transparência - CEIS/CNEP"
+			dados.LinkFonte = "https://portaldatransparencia.gov.br/sancoes/consulta"
+			dados.UltimaInvestigacaoOnline = time.Now().Format("02/01/2006 15:04")
+
+			_ = app.salvarDadosExternos(dados)
+
+			resultado = ResultadoConsultaExterna{
+				Tipo:     "CEIS/CNEP",
+				Sucesso:  true,
+				Mensagem: "Consulta CEIS/CNEP finalizada. Confira os campos de detalhes.",
+				DataHora: time.Now().Format("02/01/2006 15:04"),
+			}
 		}
 	}
 
@@ -546,6 +577,14 @@ const dadosExternosReuniaoHTML = `
 
 	<label>Detalhes Ibama</label>
 	<textarea name="ibama_detalhes" rows="3">{{.Dados.IbamaDetalhes}}</textarea>
+
+	<button type="submit" name="acao" value="consultar_ceis_cnep">
+		Consultar CEIS/CNEP no Portal da Transparência
+	</button>
+
+	<p class="pequeno">
+		Exige token da API do Portal da Transparência configurado no sistema.
+	</p>
 
 	<label>CEIS - Cadastro de empresas inidôneas/suspensas</label>
 	<select name="ceis_status">
