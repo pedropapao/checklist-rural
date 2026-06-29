@@ -26,8 +26,18 @@ const configuracoesAPIHTML = `
 	<div class="card">
 		<h3>Conecta Gov / SICAR</h3>
 
-		<label>Token Conecta Gov</label>
-		<textarea name="conecta_gov_token" rows="4" placeholder="Cole aqui o token do Conecta Gov/SICAR">{{.Config.ConectaGovToken}}</textarea>
+		<label>Client ID / Chave Conecta Gov</label>
+		<input type="text" name="conecta_gov_client_id" value="{{.Config.ConectaGovClientID}}" placeholder="Cole aqui o Client ID / chave">
+
+		<label>Client Secret / Senha Conecta Gov</label>
+		<textarea name="conecta_gov_client_secret" rows="3" placeholder="Cole aqui o Client Secret / senha">{{.Config.ConectaGovClientSecret}}</textarea>
+
+		<label>Token Conecta Gov manual</label>
+		<textarea name="conecta_gov_token" rows="4" placeholder="Opcional: cole aqui um token pronto, se tiver">{{.Config.ConectaGovToken}}</textarea>
+
+		<p class="pequeno">
+			Preferência: use Client ID e Client Secret. O token manual fica apenas como alternativa.
+		</p>
 
 		<label>URL SICAR por CNPJ</label>
 		<input type="text" name="sicar_cnpj_url" value="{{.Config.SICARCNPJURL}}" placeholder="https://.../%s">
@@ -36,11 +46,18 @@ const configuracoesAPIHTML = `
 			Use <strong>%s</strong> no lugar onde o CNPJ deve entrar.
 		</p>
 
-		<label>URL SICAR por CAR</label>
+		<label>URL SICAR por CAR / Imóvel</label>
 		<input type="text" name="sicar_car_url" value="{{.Config.SICARCARURL}}" placeholder="https://.../%s">
 
 		<p class="pequeno">
 			Use <strong>%s</strong> no lugar onde o código CAR deve entrar.
+		</p>
+
+		<label>URL SICAR Tema / Área / Polígono</label>
+		<input type="text" name="sicar_tema_url" value="{{.Config.SICARTemaURL}}" placeholder="https://.../%s">
+
+		<p class="pequeno">
+			Essa URL será usada para buscar temas, área e possível polígono do imóvel. Use <strong>%s</strong> no lugar do código CAR/SICAR.
 		</p>
 	</div>
 

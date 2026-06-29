@@ -66,7 +66,6 @@ func main() {
 	}
 
 	http.HandleFunc("/configuracoes-api", app.telaConfiguracoesAPI)
-	http.HandleFunc("/", app.telaInicial)
 	http.HandleFunc("/consultas-externas", app.telaConsultasExternas)
 	http.HandleFunc("/dados-externos-reuniao", app.telaDadosExternosReuniao)
 	http.HandleFunc("/georreferenciamento", app.telaGeorreferenciamento)
@@ -113,6 +112,7 @@ func main() {
 
 	abrirNavegador(endereco)
 
+	http.HandleFunc("/", app.painelSimples)
 	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)

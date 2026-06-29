@@ -165,7 +165,250 @@ func htmlBase(conteudo string) string {
 			color: #666;
 			font-size: 13px;
 		}
-	</style>
+	
+/* UI MODERNA CHECKLIST RURAL */
+:root {
+	--verde: #1f7a4d;
+	--verde-escuro: #145c38;
+	--verde-claro: #eef8f1;
+	--fundo: #f4f7f3;
+	--card: #ffffff;
+	--texto: #1f2933;
+	--muted: #6b7280;
+	--borda: #d9e2dc;
+	--alerta: #fff7e6;
+	--perigo: #fff1f1;
+}
+
+body {
+	background: var(--fundo) !important;
+	color: var(--texto);
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0;
+}
+
+.container, main {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 24px;
+}
+
+h1, h2, h3 {
+	color: var(--verde-escuro);
+}
+
+h2 {
+	font-size: 24px;
+	margin-top: 0;
+	margin-bottom: 18px;
+}
+
+h3 {
+	font-size: 18px;
+	margin-top: 0;
+}
+
+.card {
+	background: var(--card);
+	border: 1px solid var(--borda);
+	border-radius: 16px;
+	padding: 20px;
+	margin-bottom: 18px;
+	box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.card.destaque {
+	background: var(--verde-claro);
+	border-color: #cfe8d8;
+}
+
+.card.alerta {
+	background: var(--alerta);
+	border-color: #f2d28a;
+}
+
+.card.perigo {
+	background: var(--perigo);
+	border-color: #f2b8b8;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+}
+
+label {
+	display: block;
+	font-weight: bold;
+	margin-top: 12px;
+	margin-bottom: 6px;
+	color: var(--texto);
+}
+
+input, select, textarea {
+	width: 100%;
+	padding: 11px 12px;
+	border: 1px solid var(--borda);
+	border-radius: 10px;
+	font-size: 14px;
+	background: #fff;
+	color: var(--texto);
+}
+
+textarea {
+	resize: vertical;
+}
+
+button, .botao, a.botao {
+	display: inline-block;
+	border: 0;
+	background: var(--verde);
+	color: white !important;
+	text-decoration: none;
+	border-radius: 10px;
+	padding: 11px 15px;
+	font-weight: bold;
+	font-size: 14px;
+	cursor: pointer;
+	margin: 4px 4px 4px 0;
+}
+
+button:hover, .botao:hover, a.botao:hover {
+	background: var(--verde-escuro);
+}
+
+.botao.secundario, a.botao.secundario {
+	background: #eef6f0;
+	color: var(--verde-escuro) !important;
+	border: 1px solid #cfe5d6;
+}
+
+.botao.secundario:hover, a.botao.secundario:hover {
+	background: #dcefe4;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	background: white;
+	border-radius: 12px;
+	overflow: hidden;
+	margin-top: 12px;
+}
+
+th {
+	background: #eef6f0;
+	color: var(--verde-escuro);
+	text-align: left;
+	padding: 12px;
+	font-size: 14px;
+}
+
+td {
+	border-top: 1px solid var(--borda);
+	padding: 12px;
+	vertical-align: top;
+	font-size: 14px;
+}
+
+tr:hover td {
+	background: #fafdfb;
+}
+
+.pequeno {
+	font-size: 13px;
+	color: var(--muted);
+	line-height: 1.45;
+}
+
+pre {
+	background: #0f172a;
+	color: #e5e7eb;
+	border-radius: 12px;
+	padding: 14px;
+	overflow-x: auto;
+}
+
+.topo-sistema {
+	background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+	color: white;
+	padding: 18px 24px;
+	margin-bottom: 24px;
+}
+
+.topo-sistema .topo-conteudo {
+	max-width: 1180px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.topo-sistema strong {
+	font-size: 20px;
+}
+
+.topo-sistema nav {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.topo-sistema a {
+	color: white !important;
+	text-decoration: none;
+	background: rgba(255,255,255,0.14);
+	padding: 8px 11px;
+	border-radius: 9px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.topo-sistema a:hover {
+	background: rgba(255,255,255,0.24);
+}
+
+.barra-acoes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 12px 0 20px;
+}
+
+.badge {
+	display: inline-block;
+	border-radius: 999px;
+	padding: 4px 9px;
+	font-size: 12px;
+	font-weight: bold;
+	background: #eef6f0;
+	color: var(--verde-escuro);
+	border: 1px solid #cfe5d6;
+}
+
+@media (max-width: 700px) {
+	.container, main {
+		padding: 14px;
+	}
+
+	.card {
+		padding: 16px;
+	}
+
+	table {
+		display: block;
+		overflow-x: auto;
+	}
+
+	.topo-sistema .topo-conteudo {
+		align-items: flex-start;
+	}
+}
+
+</style>
 </head>
 <body>
 	<header>

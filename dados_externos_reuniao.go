@@ -512,6 +512,34 @@ func (app *App) telaDadosExternosReuniao(w http.ResponseWriter, r *http.Request)
 				Mensagem: "Consulta SICAR por CAR finalizada. Veja a situação do CAR e as observações da investigação.",
 				DataHora: time.Now().Format("02/01/2006 15:04"),
 			}
+
+		case "consultar_sicar_tema":
+			sicar := consultarSICARTemaPorCAR(dados.CAR)
+
+			dados.Observacoes = substituirBlocoConsultaSICAR(
+				dados.Observacoes,
+				"Consulta SICAR Tema / Área / Polígono:",
+				sicar.Resumo,
+			)
+
+			if sicar.Encontrou {
+				dados.SIGEFGEO = "Consulta SICAR Tema realizada"
+			} else if dados.SIGEFGEO == "" {
+				dados.SIGEFGEO = "Consulta SICAR Tema sem confirmação"
+			}
+
+			dados.FonteConsulta = "Conecta Gov / SICAR Tema"
+			dados.LinkFonte = "https://www.gov.br/conecta/catalogo/apis/sicar-tema"
+			dados.UltimaInvestigacaoOnline = time.Now().Format("02/01/2006 15:04")
+
+			_ = app.salvarDadosExternos(dados)
+
+			resultado = ResultadoConsultaExterna{
+				Tipo:     "SICAR Tema",
+				Sucesso:  sicar.Encontrou,
+				Mensagem: "Consulta SICAR Tema finalizada. Veja as observações da investigação.",
+				DataHora: time.Now().Format("02/01/2006 15:04"),
+			}
 		}
 	}
 
@@ -519,11 +547,13 @@ func (app *App) telaDadosExternosReuniao(w http.ResponseWriter, r *http.Request)
 
 	tpl := template.Must(template.New("dados_externos").Parse(htmlBase(dadosExternosReuniaoHTML)))
 	dadosTela := map[string]any{
-		"Titulo":       "Investigação online",
-		"Reuniao":      reuniao,
-		"Dados":        dadosExternos,
-		"Resultado":    resultado,
-		"ResumoGeoref": app.resumoArquivosGeorreferenciamento(reuniao.ID),
+		"Titulo":                 "Investigação online",
+		"Reuniao":                reuniao,
+		"Dados":                  dadosExternos,
+		"Resultado":              resultado,
+		"LinkConsultaPublicaCAR": linkConsultaPublicaCAR(dadosExternos.CAR),
+		"OrientacaoConsultaCAR":  textoOrientacaoConsultaPublicaCAR(dadosExternos.CAR),
+		"ResumoGeoref":           app.resumoArquivosGeorreferenciamento(reuniao.ID),
 	}
 
 	tpl.Execute(w, dadosTela)
@@ -595,6 +625,44 @@ const dadosExternosReuniaoHTML = `
 
 
 <form method="POST" action="/dados-externos-reuniao?id={{.Reuniao.ID}}">
+
+<div class="card destaque">
+	<h3>Consulta rápida SICAR/CAR</h3>
+
+	<p class="pequeno">
+		Use este bloco para trabalhar rápido: primeiro tente CNPJ; se não responder, informe o CAR e use a consulta pública ou as APIs por CAR.
+	</p>
+
+	<div class="grid">
+		<button type="submit" name="acao" value="consultar_sicar_cnpj">
+			1. Buscar CAR pelo CNPJ
+		</button>
+
+		<button type="submit" name="acao" value="consultar_sicar_car">
+			2. Consultar imóvel pelo CAR
+		</button>
+
+		<button type="submit" name="acao" value="consultar_sicar_tema">
+			3. Consultar área/polígono pelo CAR
+		</button>
+	</div>
+
+	<p>
+		<a class="botao secundario" href="{{.LinkConsultaPublicaCAR}}" target="_blank">
+			Abrir Consulta Pública do CAR
+		</a>
+	</p>
+
+	<p class="pequeno">
+		{{.OrientacaoConsultaCAR}}
+	</p>
+
+	<p class="pequeno">
+		Se a consulta por CNPJ não responder, isso normalmente indica falta de autorização/token no Conecta Gov ou indisponibilidade do gateway. Nesse caso, use o CAR informado pelo produtor/documentos e consulte pelo CAR.
+	</p>
+</div>
+
+
 
 <div class="card destaque">
 	<h3>1. Consulta online por CNPJ</h3>
@@ -683,6 +751,14 @@ const dadosExternosReuniaoHTML = `
 
 	<button type="submit" name="acao" value="consultar_sicar_car">
 		Consultar SICAR pelo CAR
+	</button>
+
+	<button type="submit" name="acao" value="consultar_sicar_tema">
+		Consultar SICAR Tema / Área / Polígono
+	</button>
+
+	<button type="submit" name="acao" value="limpar_sicar">
+		Limpar mensagens SICAR antigas
 	</button>
 
 	<p class="pequeno">

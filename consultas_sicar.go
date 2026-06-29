@@ -28,10 +28,16 @@ func consultarSICARPorCNPJ(cnpjInformado string) ResultadoSICAR {
 
 	modeloURL := os.Getenv("SICAR_CNPJ_URL")
 	if strings.TrimSpace(modeloURL) == "" {
-		modeloURL = "https://apigateway.conectagov.estaleiro.serpro.gov.br/api-sicar-cpfcnpj/v1/%s"
+		modeloURL = urlPadraoSICARCNPJ
 	}
 
-	url := fmt.Sprintf(modeloURL, cnpj)
+	url, err := montarURLSICAR(modeloURL, cnpj)
+	if err != nil {
+		return ResultadoSICAR{
+			Encontrou: false,
+			Resumo:    err.Error(),
+		}
+	}
 
 	return consultarSICARURL(url, "SICAR por CNPJ")
 }
@@ -48,22 +54,26 @@ func consultarSICARPorCAR(carInformado string) ResultadoSICAR {
 
 	modeloURL := os.Getenv("SICAR_CAR_URL")
 	if strings.TrimSpace(modeloURL) == "" {
-		modeloURL = "https://apigateway.conectagov.estaleiro.serpro.gov.br/api-sicar-imovel/v1/%s"
+		modeloURL = urlPadraoSICARImovel
 	}
 
-	url := fmt.Sprintf(modeloURL, car)
+	url, err := montarURLSICAR(modeloURL, car)
+	if err != nil {
+		return ResultadoSICAR{
+			Encontrou: false,
+			Resumo:    err.Error(),
+		}
+	}
 
 	return consultarSICARURL(url, "SICAR por CAR")
 }
 
 func consultarSICARURL(url string, tipo string) ResultadoSICAR {
-	token := strings.TrimSpace(os.Getenv("CONECTA_GOV_TOKEN"))
-
-	if token == "" {
+	token, err := obterTokenConectaGov()
+	if err != nil {
 		return ResultadoSICAR{
 			Encontrou: false,
-			Resumo: "Token do Conecta Gov não configurado. Defina a variável CONECTA_GOV_TOKEN. " +
-				"Sem esse token, o app não consegue consultar a API oficial do SICAR.",
+			Resumo:    err.Error(),
 		}
 	}
 
@@ -310,6 +320,77 @@ func substituirBlocoConsultaSICAR(observacoes string, titulo string, resumo stri
 	}
 
 	filtradas = append(filtradas, novoBloco)
+
+	return strings.Join(filtradas, "\n\n")
+}
+
+func consultarSICARTemaPorCAR(carInformado string) ResultadoSICAR {
+	car := strings.TrimSpace(carInformado)
+
+	if car == "" {
+		return ResultadoSICAR{
+			Encontrou: false,
+			Resumo:    "Informe o número/código do CAR para consultar temas, área ou polígono.",
+		}
+	}
+
+	modeloURL := os.Getenv("SICAR_TEMA_URL")
+	if strings.TrimSpace(modeloURL) == "" {
+		modeloURL = urlPadraoSICARTema
+	}
+
+	url, err := montarURLSICAR(modeloURL, car)
+	if err != nil {
+		return ResultadoSICAR{
+			Encontrou: false,
+			Resumo:    err.Error(),
+		}
+	}
+
+	return consultarSICARURL(url, "SICAR Tema / Área / Polígono")
+}
+
+func montarURLSICAR(modeloURL string, valor string) (string, error) {
+	modeloURL = strings.TrimSpace(modeloURL)
+	valor = strings.TrimSpace(valor)
+
+	if modeloURL == "" {
+		return "", fmt.Errorf("URL SICAR não configurada.")
+	}
+
+	if !strings.Contains(modeloURL, "%s") {
+		return "", fmt.Errorf("URL SICAR inválida. A URL precisa conter %%s no lugar onde o CNPJ/CAR será inserido.")
+	}
+
+	return fmt.Sprintf(modeloURL, valor), nil
+}
+
+func limparBlocosSICARObservacoes(observacoes string) string {
+	observacoes = strings.TrimSpace(observacoes)
+
+	if observacoes == "" {
+		return ""
+	}
+
+	partes := strings.Split(observacoes, "\n\n")
+	filtradas := []string{}
+
+	for _, parte := range partes {
+		parteLimpa := strings.TrimSpace(parte)
+		parteMinuscula := strings.ToLower(parteLimpa)
+
+		if parteLimpa == "" {
+			continue
+		}
+
+		if strings.HasPrefix(parteMinuscula, "consulta sicar por cnpj:") ||
+			strings.HasPrefix(parteMinuscula, "consulta sicar por car:") ||
+			strings.HasPrefix(parteMinuscula, "consulta sicar tema") {
+			continue
+		}
+
+		filtradas = append(filtradas, parteLimpa)
+	}
 
 	return strings.Join(filtradas, "\n\n")
 }

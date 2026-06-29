@@ -10,9 +10,12 @@ import (
 )
 
 type ConfigAPI struct {
+	ConectaGovClientID       string
+	ConectaGovClientSecret   string
 	ConectaGovToken          string
 	SICARCNPJURL             string
 	SICARCARURL              string
+	SICARTemaURL             string
 	PortalTransparenciaToken string
 }
 
@@ -68,9 +71,12 @@ func carregarConfigEnv() {
 
 func lerConfigAPI() ConfigAPI {
 	return ConfigAPI{
+		ConectaGovClientID:       os.Getenv("CONECTA_GOV_CLIENT_ID"),
+		ConectaGovClientSecret:   os.Getenv("CONECTA_GOV_CLIENT_SECRET"),
 		ConectaGovToken:          os.Getenv("CONECTA_GOV_TOKEN"),
 		SICARCNPJURL:             os.Getenv("SICAR_CNPJ_URL"),
 		SICARCARURL:              os.Getenv("SICAR_CAR_URL"),
+		SICARTemaURL:             os.Getenv("SICAR_TEMA_URL"),
 		PortalTransparenciaToken: os.Getenv("PORTAL_TRANSPARENCIA_TOKEN"),
 	}
 }
@@ -85,9 +91,12 @@ func salvarConfigAPI(c ConfigAPI) error {
 		"# Configurações privadas do Checklist Rural",
 		"# Não envie este arquivo para o GitHub.",
 		"",
+		"CONECTA_GOV_CLIENT_ID=" + strings.TrimSpace(c.ConectaGovClientID),
+		"CONECTA_GOV_CLIENT_SECRET=" + strings.TrimSpace(c.ConectaGovClientSecret),
 		"CONECTA_GOV_TOKEN=" + strings.TrimSpace(c.ConectaGovToken),
 		"SICAR_CNPJ_URL=" + strings.TrimSpace(c.SICARCNPJURL),
 		"SICAR_CAR_URL=" + strings.TrimSpace(c.SICARCARURL),
+		"SICAR_TEMA_URL=" + strings.TrimSpace(c.SICARTemaURL),
 		"PORTAL_TRANSPARENCIA_TOKEN=" + strings.TrimSpace(c.PortalTransparenciaToken),
 		"",
 	}
@@ -97,9 +106,12 @@ func salvarConfigAPI(c ConfigAPI) error {
 		return err
 	}
 
+	os.Setenv("CONECTA_GOV_CLIENT_ID", strings.TrimSpace(c.ConectaGovClientID))
+	os.Setenv("CONECTA_GOV_CLIENT_SECRET", strings.TrimSpace(c.ConectaGovClientSecret))
 	os.Setenv("CONECTA_GOV_TOKEN", strings.TrimSpace(c.ConectaGovToken))
 	os.Setenv("SICAR_CNPJ_URL", strings.TrimSpace(c.SICARCNPJURL))
 	os.Setenv("SICAR_CAR_URL", strings.TrimSpace(c.SICARCARURL))
+	os.Setenv("SICAR_TEMA_URL", strings.TrimSpace(c.SICARTemaURL))
 	os.Setenv("PORTAL_TRANSPARENCIA_TOKEN", strings.TrimSpace(c.PortalTransparenciaToken))
 
 	return nil
@@ -124,9 +136,12 @@ func (app *App) telaConfiguracoesAPI(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		config := ConfigAPI{
+			ConectaGovClientID:       r.FormValue("conecta_gov_client_id"),
+			ConectaGovClientSecret:   r.FormValue("conecta_gov_client_secret"),
 			ConectaGovToken:          r.FormValue("conecta_gov_token"),
 			SICARCNPJURL:             r.FormValue("sicar_cnpj_url"),
 			SICARCARURL:              r.FormValue("sicar_car_url"),
+			SICARTemaURL:             r.FormValue("sicar_tema_url"),
 			PortalTransparenciaToken: r.FormValue("portal_transparencia_token"),
 		}
 
@@ -139,7 +154,7 @@ func (app *App) telaConfiguracoesAPI(w http.ResponseWriter, r *http.Request) {
 		mensagem = "Configurações salvas com sucesso."
 	}
 
-	config := lerConfigAPI()
+	config := aplicarPadroesConfigAPI(lerConfigAPI())
 
 	dados := map[string]any{
 		"Titulo":                       "Configurações das APIs",
@@ -156,4 +171,24 @@ func (app *App) telaConfiguracoesAPI(w http.ResponseWriter, r *http.Request) {
 
 func templateMust(nome string, conteudo string) *template.Template {
 	return template.Must(template.New(nome).Parse(htmlBase(conteudo)))
+}
+
+const urlPadraoSICARCNPJ = "https://apigateway.conectagov.estaleiro.serpro.gov.br/api-sicar-cpfcnpj/v1/%s"
+const urlPadraoSICARImovel = "https://apigateway.conectagov.estaleiro.serpro.gov.br/api-sicar-imovel/v1/%s"
+const urlPadraoSICARTema = "https://apigateway.conectagov.estaleiro.serpro.gov.br/api-sicar-tema/v1/%s"
+
+func aplicarPadroesConfigAPI(c ConfigAPI) ConfigAPI {
+	if strings.TrimSpace(c.SICARCNPJURL) == "" {
+		c.SICARCNPJURL = urlPadraoSICARCNPJ
+	}
+
+	if strings.TrimSpace(c.SICARCARURL) == "" {
+		c.SICARCARURL = urlPadraoSICARImovel
+	}
+
+	if strings.TrimSpace(c.SICARTemaURL) == "" {
+		c.SICARTemaURL = urlPadraoSICARTema
+	}
+
+	return c
 }
