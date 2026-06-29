@@ -646,110 +646,84 @@ const novaReuniaoHTML = `
 const reunioesHTML = `
 <h2>Reuniões salvas</h2>
 
-<a class="botao" href="/nova-reuniao">Nova reunião</a>
-<a class="botao secundario" href="/">Início</a>
-
-<div class="card">
-	<h3>Filtros</h3>
-
-	<form method="GET" action="/reunioes">
-		<label>Buscar por produtor, telefone, município, banco, projeto ou observação</label>
-		<input type="text" name="busca" value="{{.Filtros.Busca}}" placeholder="Digite aqui para buscar">
-
-		<div class="grid">
-			<div>
-				<label>Banco</label>
-				<select name="banco">
-					<option value="" {{if eq .Filtros.Banco ""}}selected{{end}}>Todos</option>
-					<option value="Banco do Brasil" {{if eq .Filtros.Banco "Banco do Brasil"}}selected{{end}}>Banco do Brasil</option>
-					<option value="Sicoob" {{if eq .Filtros.Banco "Sicoob"}}selected{{end}}>Sicoob</option>
-					<option value="Ainda não definido" {{if eq .Filtros.Banco "Ainda não definido"}}selected{{end}}>Ainda não definido</option>
-				</select>
-			</div>
-
-			<div>
-				<label>Situação do checklist</label>
-				<select name="situacao">
-					<option value="" {{if eq .Filtros.Situacao ""}}selected{{end}}>Todas</option>
-					<option value="pendentes" {{if eq .Filtros.Situacao "pendentes"}}selected{{end}}>Com pendências</option>
-					<option value="andamento" {{if eq .Filtros.Situacao "andamento"}}selected{{end}}>Em andamento</option>
-					<option value="concluidas" {{if eq .Filtros.Situacao "concluidas"}}selected{{end}}>Concluídas</option>
-				</select>
-			</div>
-		</div>
-
-		<br>
-		<button type="submit">Filtrar</button>
-		<a class="botao secundario" href="/reunioes">Limpar filtros</a>
-	</form>
+<div class="barra-acoes">
+	<a class="botao" href="/nova-reuniao">Nova reunião</a>
+	<a class="botao secundario" href="/">Início</a>
 </div>
 
-<table>
-	<tr>
-		<th>ID</th>
-		<th>Produtor</th>
-		<th>Contato</th>
-		<th>Projeto</th>
-		<th>Triagem</th>
-		<th>Andamento</th>
-		<th>Data</th>
-		<th>Observações</th>
-		<th>Ações</th>
-	</tr>
+<div class="card destaque">
+	<h3>Buscar projeto</h3>
+	<p class="pequeno">
+		Pesquise por produtor, município, banco, atividade, tipo de projeto ou classificação.
+	</p>
 
+	<input 
+		type="text" 
+		id="buscaReunioes" 
+		placeholder="Digite para filtrar as reuniões..."
+		onkeyup="filtrarReunioes()"
+	>
+</div>
+
+{{if .Reunioes}}
+<div class="grid" id="listaReunioes">
 	{{range .Reunioes}}
-	<tr>
-		<td>{{.ID}}</td>
-		<td>
-			<strong>{{.Produtor}}</strong><br>
-			{{.Municipio}}/{{.UF}}
-		</td>
-		<td>{{.Telefone}}</td>
-		<td>
-			Banco: {{.Banco}}<br>
-			Tipo: {{.TipoProjeto}}<br>
-			Atividade: {{.Atividade}}<br>
-			Classificação: {{.ClassificacaoProdutor}}
-		</td>
-		<td>
-			Cadastro banco: {{.CadastroBanco}}<br>
-			Financ. ativo: {{.FinanciamentoAtivo}}<br>
-			Restrição: {{.RestricaoCadastral}}<br>
-			Imóvel próprio: {{.ImovelProprio}}<br>
-			Arrendado/parceria: {{.ImovelArrendado}}<br>
-			CAR: {{.TemCAR}}<br>
-			Água/irrigação: {{.UsaAgua}}<br>
-			Pecuária: {{.TemPecuaria}}<br>
-			Investimento: {{.TemInvestimento}}<br>
-			Obra: {{.TemObra}}<br>
-			Supressão: {{.TemSupressao}}<br>
-			ZARC: {{.PrecisaZARC}}
-		</td>
-		<td>
-			<strong>{{.Resumo.PercentualConcluido}}%</strong> concluído<br>
-			Total: {{.Resumo.Total}}<br>
-			Pendentes: {{.Resumo.Pendentes}}<br>
-			Recebidos: {{.Resumo.Recebidos}}<br>
-			Não se aplica: {{.Resumo.NaoSeAplica}}
-		</td>
-		<td>{{.CriadoEm}}</td>
-		<td>{{.Observacoes}}</td>
-		<td>
-			<a class="botao" href="/detalhes?id={{.ID}}">Detalhes</a>
-			<a class="botao alerta" href="/editar-reuniao?id={{.ID}}">Editar</a>
-			<a class="botao perigo" href="/confirmar-excluir?id={{.ID}}">Excluir</a>
-			<a class="botao" href="/checklist?id={{.ID}}">Checklist</a>
-			<a class="botao" href="/checklist-controle?id={{.ID}}">Controle</a>
-			<a class="botao alerta" href="/whatsapp?id={{.ID}}">WhatsApp</a>
-			<a class="botao secundario" href="/exportar-checklist-txt?id={{.ID}}">TXT</a>
-		</td>
-	</tr>
-	{{else}}
-	<tr>
-		<td colspan="9">Nenhuma reunião encontrada.</td>
-	</tr>
+	<div class="card card-reuniao" data-busca="{{.Produtor}} {{.Municipio}} {{.UF}} {{.Banco}} {{.TipoProjeto}} {{.Atividade}} {{.ClassificacaoProdutor}} {{.FinalidadeCredito}}">
+		<h3>{{.Produtor}}</h3>
+
+		<p class="pequeno">
+			{{.Municipio}}/{{.UF}} — {{.Banco}}
+		</p>
+
+		<p>
+			<span class="badge">{{.TipoProjeto}}</span>
+			<span class="badge">{{.Atividade}}</span>
+			{{if .ClassificacaoProdutor}}
+				<span class="badge">{{.ClassificacaoProdutor}}</span>
+			{{end}}
+		</p>
+
+		<p><strong>Finalidade:</strong> {{if .FinalidadeCredito}}{{.FinalidadeCredito}}{{else}}-{{end}}</p>
+		<p><strong>Data:</strong> {{.CriadoEm}}</p>
+
+		<div class="barra-acoes">
+			<a class="botao" href="/detalhes?id={{.ID}}">Abrir</a>
+			<a class="botao secundario" href="/editar-reuniao?id={{.ID}}">Editar</a>
+			<a class="botao secundario" href="/investigacao?id={{.ID}}">Investigação</a>
+			<a class="botao secundario" href="/relatorio?id={{.ID}}" target="_blank">Relatório</a>
+		</div>
+	</div>
 	{{end}}
-</table>
+</div>
+{{else}}
+<div class="card alerta">
+	<h3>Nenhuma reunião cadastrada</h3>
+	<p>
+		Comece criando sua primeira reunião de projeto rural.
+	</p>
+
+	<a class="botao" href="/nova-reuniao">Criar primeira reunião</a>
+</div>
+{{end}}
+
+<script>
+function filtrarReunioes() {
+	const campo = document.getElementById("buscaReunioes");
+	const termo = campo.value.toLowerCase().trim();
+	const cards = document.querySelectorAll(".card-reuniao");
+
+	cards.forEach(function(card) {
+		const texto = card.getAttribute("data-busca").toLowerCase();
+
+		if (texto.includes(termo)) {
+			card.style.display = "";
+		} else {
+			card.style.display = "none";
+		}
+	});
+}
+</script>
+
 `
 
 const editarReuniaoHTML = `
