@@ -25,6 +25,7 @@ func (app *App) telaRelatorioPreAnalise(w http.ResponseWriter, r *http.Request) 
 		"Leitura":      montarLeituraInicial(reuniao),
 		"LinhasBB":     sugerirLinhasBB(reuniao),
 		"LinhasSicoob": sugerirLinhasSicoob(reuniao),
+		"ResumoGeoref": app.resumoArquivosGeorreferenciamento(reuniao.ID),
 	}
 
 	tpl := template.Must(template.New("relatorio").Parse(relatorioPreAnaliseHTML))
@@ -320,6 +321,44 @@ const relatorioPreAnaliseHTML = `
 			<span class="valor">{{.Reuniao.TemSupressao}}</span>
 		</div>
 	</div>
+
+
+	<h2>Dados de georreferenciamento</h2>
+
+	{{if .ResumoGeoref.Total}}
+	<div class="card">
+		<h3>Arquivos de georreferenciamento importados</h3>
+
+		<p><strong>Total de arquivos:</strong> {{.ResumoGeoref.Total}}</p>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Tipo</th>
+					<th>Arquivo</th>
+					<th>Data</th>
+					<th>Observação/resumo</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{range .ResumoGeoref.Arquivos}}
+				<tr>
+					<td>{{.Tipo}}</td>
+					<td>{{.NomeOriginal}}</td>
+					<td>{{.CriadoEm}}</td>
+					<td>{{.Observacao}}</td>
+				</tr>
+				{{end}}
+			</tbody>
+		</table>
+	</div>
+	{{else}}
+	<div class="card alerta">
+		<h3>Arquivos de georreferenciamento</h3>
+		<p>Nenhum arquivo de georreferenciamento foi importado para esta reunião até o momento.</p>
+	</div>
+	{{end}}
+
 
 	<h2>5. Leitura inicial automática</h2>
 

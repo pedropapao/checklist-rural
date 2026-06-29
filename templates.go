@@ -1090,6 +1090,8 @@ const arquivoGeradoHTML = `
 	<pre>{{.Caminho}}</pre>
 </div>
 
+<a class="botao secundario" href="/configuracoes-api">Configurações das APIs</a>
+
 <a class="botao" href="/reunioes">Voltar para reuniões</a>
 <a class="botao secundario" href="/">Início</a>
 `

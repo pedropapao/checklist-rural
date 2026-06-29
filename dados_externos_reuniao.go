@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -453,6 +454,64 @@ func (app *App) telaDadosExternosReuniao(w http.ResponseWriter, r *http.Request)
 				Mensagem: "Consulta Ibama finalizada. Confira o campo Embargo Ibama e os detalhes.",
 				DataHora: time.Now().Format("02/01/2006 15:04"),
 			}
+
+		case "consultar_sicar_cnpj":
+			sicar := consultarSICARPorCNPJ(dados.CNPJ)
+
+			dados.Observacoes = substituirBlocoConsultaSICAR(
+				dados.Observacoes,
+				"Consulta SICAR por CNPJ:",
+				sicar.Resumo,
+			)
+
+			if sicar.Encontrou {
+				dados.SituacaoCAR = "Consulta SICAR por CNPJ realizada"
+
+				if strings.TrimSpace(dados.CAR) == "" && len(sicar.CARs) > 0 {
+					dados.CAR = sicar.CARs[0]
+				}
+			}
+
+			dados.FonteConsulta = "Conecta Gov / SICAR - CNPJ"
+			dados.LinkFonte = "https://www.gov.br/conecta/catalogo/apis/consulta-sicar-cpf-cnpj"
+			dados.UltimaInvestigacaoOnline = time.Now().Format("02/01/2006 15:04")
+
+			_ = app.salvarDadosExternos(dados)
+
+			resultado = ResultadoConsultaExterna{
+				Tipo:     "SICAR CNPJ",
+				Sucesso:  sicar.Encontrou,
+				Mensagem: "Consulta SICAR por CNPJ finalizada. Veja as observações da investigação.",
+				DataHora: time.Now().Format("02/01/2006 15:04"),
+			}
+
+		case "consultar_sicar_car":
+			sicar := consultarSICARPorCAR(dados.CAR)
+
+			dados.Observacoes = substituirBlocoConsultaSICAR(
+				dados.Observacoes,
+				"Consulta SICAR por CAR:",
+				sicar.Resumo,
+			)
+
+			if sicar.Encontrou {
+				dados.SituacaoCAR = "Consulta SICAR por CAR realizada"
+			} else if dados.SituacaoCAR == "" {
+				dados.SituacaoCAR = "Consulta SICAR por CAR sem confirmação"
+			}
+
+			dados.FonteConsulta = "Conecta Gov / SICAR - CAR"
+			dados.LinkFonte = "https://www.gov.br/conecta/catalogo/apis/sicar-imovel"
+			dados.UltimaInvestigacaoOnline = time.Now().Format("02/01/2006 15:04")
+
+			_ = app.salvarDadosExternos(dados)
+
+			resultado = ResultadoConsultaExterna{
+				Tipo:     "SICAR CAR",
+				Sucesso:  sicar.Encontrou,
+				Mensagem: "Consulta SICAR por CAR finalizada. Veja a situação do CAR e as observações da investigação.",
+				DataHora: time.Now().Format("02/01/2006 15:04"),
+			}
 		}
 	}
 
@@ -552,10 +611,18 @@ const dadosExternosReuniaoHTML = `
 			Consultar CNPJ
 		</button>
 
+		<button type="submit" name="acao" value="consultar_sicar_cnpj">
+			Buscar imóveis no SICAR pelo CNPJ
+		</button>
+
 		<button type="submit" name="acao" value="salvar">
 			Salvar investigação
 		</button>
 	</div>
+
+	<p class="pequeno">
+		A busca SICAR por CNPJ exige token/credencial do Conecta Gov configurado no app.
+	</p>
 
 	<label>Razão social / nome encontrado</label>
 	<input type="text" name="razao_social" value="{{.Dados.RazaoSocial}}">
@@ -613,6 +680,14 @@ const dadosExternosReuniaoHTML = `
 
 	<label>CAR</label>
 	<input type="text" name="car" value="{{.Dados.CAR}}" placeholder="Número do CAR">
+
+	<button type="submit" name="acao" value="consultar_sicar_car">
+		Consultar SICAR pelo CAR
+	</button>
+
+	<p class="pequeno">
+		A consulta SICAR por CAR exige token/credencial do Conecta Gov configurado no app.
+	</p>
 
 	<label>Situação do CAR</label>
 	<input type="text" name="situacao_car" value="{{.Dados.SituacaoCAR}}" placeholder="Ex: ativo, pendente, aguardando análise">

@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	carregarConfigEnv()
 	pastaDados, err := criarPastaDados()
 	if err != nil {
 		log.Fatal(err)
@@ -64,6 +65,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	http.HandleFunc("/configuracoes-api", app.telaConfiguracoesAPI)
 	http.HandleFunc("/", app.telaInicial)
 	http.HandleFunc("/consultas-externas", app.telaConsultasExternas)
 	http.HandleFunc("/dados-externos-reuniao", app.telaDadosExternosReuniao)

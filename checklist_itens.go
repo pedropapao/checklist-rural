@@ -43,6 +43,7 @@ func (app *App) gerarItensChecklist(w http.ResponseWriter, r *http.Request) {
 	}
 
 	itens := montarItensChecklistDaReuniao(reuniao)
+	itens = app.adicionarItensGeorreferenciamentoAoChecklist(itens, reuniao)
 	agora := time.Now().Format("02/01/2006 15:04")
 
 	for _, item := range itens {

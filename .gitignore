@@ -26,3 +26,8 @@ Thumbs.db
 # Backups de código locais
 *.bak
 *.backup
+
+# Configurações privadas locais
+config.env
+*.env
+Documentos/ChecklistRural/config.env
