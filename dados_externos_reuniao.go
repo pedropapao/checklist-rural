@@ -431,6 +431,28 @@ func (app *App) telaDadosExternosReuniao(w http.ResponseWriter, r *http.Request)
 				Mensagem: "Consulta CEIS/CNEP finalizada. Confira os campos de detalhes.",
 				DataHora: time.Now().Format("02/01/2006 15:04"),
 			}
+		case "consultar_ibama":
+			ibama := consultarEmbargoIbamaPorCNPJ(dados.CNPJ)
+
+			if ibama.Encontrou {
+				dados.EmbargoIBAMA = "sim"
+			} else {
+				dados.EmbargoIBAMA = "nao"
+			}
+
+			dados.IbamaDetalhes = ibama.Resumo
+			dados.FonteConsulta = "Ibama - Dados Abertos - Termos de Embargo"
+			dados.LinkFonte = "https://dadosabertos.ibama.gov.br/dataset/fiscalizacao-termo-de-embargo"
+			dados.UltimaInvestigacaoOnline = time.Now().Format("02/01/2006 15:04")
+
+			_ = app.salvarDadosExternos(dados)
+
+			resultado = ResultadoConsultaExterna{
+				Tipo:     "Ibama",
+				Sucesso:  true,
+				Mensagem: "Consulta Ibama finalizada. Confira o campo Embargo Ibama e os detalhes.",
+				DataHora: time.Now().Format("02/01/2006 15:04"),
+			}
 		}
 	}
 
@@ -567,6 +589,14 @@ const dadosExternosReuniaoHTML = `
 
 <div class="card">
 	<h3>4. Alertas e bases públicas</h3>
+
+	<button type="submit" name="acao" value="consultar_ibama">
+		Consultar embargos Ibama por CNPJ
+	</button>
+
+	<p class="pequeno">
+		A primeira consulta pode demorar, pois o app baixa a base oficial de termos de embargo do Ibama e guarda em cache por 7 dias.
+	</p>
 
 	<label>Embargo Ibama</label>
 	<select name="embargo_ibama">
