@@ -1212,6 +1212,18 @@ const detalhesReuniaoModernoHTML = `
 </div>
 
 <div class="card">
+	<h3>Checklist</h3>
+	<p class="pequeno">
+		Gere e controle o checklist inteligente da reunião.
+	</p>
+
+	<div class="barra-acoes">
+		<a class="botao" href="/checklist?id={{.Reuniao.ID}}">Gerar checklist</a>
+		<a class="botao" href="/checklist-controle?id={{.Reuniao.ID}}">Controlar checklist</a>
+	</div>
+</div>
+
+<div class="card">
 	<h3>Ações rápidas</h3>
 
 	<div class="barra-acoes">
