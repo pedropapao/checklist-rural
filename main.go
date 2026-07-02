@@ -66,6 +66,10 @@ func main() {
 	}
 
 	http.HandleFunc("/configuracoes-api", app.telaConfiguracoesAPI)
+	http.HandleFunc("/infosimples-config", app.telaConfigInfoSimples)
+	http.HandleFunc("/infosimples-car", app.telaInfoSimplesCAR)
+	http.HandleFunc("/infosimples-car-pdf", app.telaInfoSimplesCARPDF)
+	http.HandleFunc("/infosimples-car-shapefile", app.telaInfoSimplesCARShapefile)
 	http.HandleFunc("/consultas-externas", app.telaConsultasExternas)
 	http.HandleFunc("/investigacao-editar", app.editarInvestigacaoRapida)
 	http.HandleFunc("/investigacao", app.painelInvestigacao)
