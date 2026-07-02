@@ -58,6 +58,7 @@ func (app *App) telaConfigInfoSimples(w http.ResponseWriter, r *http.Request) {
 		config.CARDemonstrativoURL = strings.TrimSpace(r.FormValue("car_demonstrativo_url"))
 		config.CARDemonstrativoPDFURL = strings.TrimSpace(r.FormValue("car_demonstrativo_pdf_url"))
 		config.CARDownloadShapefileURL = strings.TrimSpace(r.FormValue("car_download_shapefile_url"))
+		config.CARImovelURL = strings.TrimSpace(r.FormValue("car_imovel_url"))
 
 		if config.CARDemonstrativoURL == "" {
 			config.CARDemonstrativoURL = urlPadraoInfoSimplesCARDemonstrativo
@@ -69,6 +70,10 @@ func (app *App) telaConfigInfoSimples(w http.ResponseWriter, r *http.Request) {
 
 		if config.CARDownloadShapefileURL == "" {
 			config.CARDownloadShapefileURL = urlPadraoInfoSimplesCARDownloadShapefile
+		}
+
+		if config.CARImovelURL == "" {
+			config.CARImovelURL = urlPadraoInfoSimplesCARImovel
 		}
 
 		err := salvarConfigInfoSimples(config)

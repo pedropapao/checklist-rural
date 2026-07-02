@@ -41,6 +41,9 @@ const infosimplesConfigHTML = `
 		<label>Endpoint CAR / Download Shapefile</label>
 		<input type="text" name="car_download_shapefile_url" value="{{.Config.CARDownloadShapefileURL}}">
 
+		<label>Endpoint CAR / Imóvel</label>
+		<input type="text" name="car_imovel_url" value="{{.Config.CARImovelURL}}">
+
 		<div class="barra-acoes">
 			<button class="botao" type="submit">Salvar InfoSimples</button>
 			<a class="botao secundario" href="/infosimples-car">Testar CAR / Demonstrativo</a>
@@ -107,6 +110,7 @@ const infosimplesCARHTML = `
 			{{if .Reuniao.ID}}
 				<a class="botao secundario" href="/infosimples-car-pdf?id={{.Reuniao.ID}}">Demonstrativo PDF</a>
 				<a class="botao secundario" href="/infosimples-car-shapefile?id={{.Reuniao.ID}}">Download Shapefile</a>
+				<a class="botao secundario" href="/infosimples-car-imovel?id={{.Reuniao.ID}}">CAR Imóvel</a>
 				<a class="botao secundario" href="/investigacao?id={{.Reuniao.ID}}">Voltar à investigação</a>
 			{{end}}
 			<a class="botao secundario" href="/">Início</a>
@@ -345,6 +349,175 @@ const infosimplesCARShapefileHTML = `
 <section class="card">
 	<h3>JSON bruto retornado</h3>
 	<pre style="white-space: pre-wrap; overflow:auto; max-height:600px;">{{.JSONBonito}}</pre>
+</section>
+{{end}}
+`
+
+const infosimplesCARImovelHTML = `
+<section class="card">
+	<h2>InfoSimples - CAR / Imóvel</h2>
+
+	<p class="pequeno">
+		Consulta dados do imóvel rural pelo número do CAR. Use para complementar a investigação do imóvel
+		com informações retornadas pela InfoSimples.
+	</p>
+
+	<div class="grade">
+		<div>
+			<strong>Token:</strong><br>
+			<span>{{.TokenMascarado}}</span>
+		</div>
+		<div>
+			<strong>Endpoint CAR / Imóvel:</strong><br>
+			<span class="pequeno">{{.Config.CARImovelURL}}</span>
+		</div>
+	</div>
+
+	{{if .Reuniao.ID}}
+		<div class="alerta">
+			<strong>Reunião:</strong> {{.Reuniao.Produtor}} —
+			{{.Reuniao.Municipio}}/{{.Reuniao.UF}}
+		</div>
+	{{end}}
+
+	{{if .Erro}}
+		<div class="alerta perigo">{{.Erro}}</div>
+	{{end}}
+
+	{{if .Sucesso}}
+		<div class="alerta sucesso">{{.Sucesso}}</div>
+	{{end}}
+
+	<form method="post" class="formulario">
+		<label>Número do CAR</label>
+		<input type="text" name="car" value="{{.CAR}}" placeholder="Ex: MG-0000000-...">
+
+		<div class="alerta perigo">
+			Atenção: essa consulta pode consumir crédito da InfoSimples. Confira o CAR antes de consultar.
+		</div>
+
+		<div class="barra-acoes">
+			<button class="botao" type="submit" name="acao" value="consultar">Consultar sem salvar</button>
+
+			{{if .Reuniao.ID}}
+				<button class="botao" type="submit" name="acao" value="consultar_salvar">
+					Consultar e salvar na reunião
+				</button>
+			{{end}}
+
+			<a class="botao secundario" href="/infosimples-car?id={{.Reuniao.ID}}">Demonstrativo</a>
+			<a class="botao secundario" href="/infosimples-car-pdf?id={{.Reuniao.ID}}">Demonstrativo PDF</a>
+			<a class="botao secundario" href="/infosimples-car-shapefile?id={{.Reuniao.ID}}">Download Shapefile</a>
+
+			{{if .Reuniao.ID}}
+				<a class="botao secundario" href="/investigacao?id={{.Reuniao.ID}}">Voltar à investigação</a>
+			{{end}}
+		</div>
+	</form>
+</section>
+
+{{if .Consultou}}
+<section class="card">
+	<h3>Resumo da resposta</h3>
+
+	<div class="grade">
+		<div><strong>Código:</strong><br>{{.Resposta.Code}}</div>
+		<div><strong>Mensagem:</strong><br>{{.Resposta.CodeMessage}}</div>
+		<div><strong>Cobrável:</strong><br>{{.Resposta.Header.Billable}}</div>
+		<div><strong>Preço informado:</strong><br>R$ {{.Resposta.Header.Price}}</div>
+		<div><strong>Serviço:</strong><br>{{.Resposta.Header.Service}}</div>
+		<div><strong>Itens retornados:</strong><br>{{.Resposta.DataCount}}</div>
+	</div>
+
+	{{if .Resposta.Errors}}
+		<h4>Erros</h4>
+		<ul>
+			{{range .Resposta.Errors}}
+				<li>{{.}}</li>
+			{{end}}
+		</ul>
+	{{end}}
+</section>
+
+<section class="card">
+	<h3>JSON bruto retornado</h3>
+	<pre style="white-space: pre-wrap; overflow:auto; max-height:600px;">{{.JSONBonito}}</pre>
+</section>
+{{end}}
+`
+
+const infosimplesFluxoAutomaticoHTML = `
+<section class="card">
+	<h2>Atualização automática pela InfoSimples</h2>
+
+	<p class="pequeno">
+		Este fluxo consulta automaticamente CAR Demonstrativo, CAR Imóvel, Demonstrativo PDF
+		e Download Shapefile. Ele pode consumir crédito em cada consulta realizada.
+	</p>
+
+	<div class="alerta perigo">
+		<strong>Atenção:</strong> este botão pode fazer até 4 consultas pagas na InfoSimples.
+		Use somente com o número do CAR conferido.
+	</div>
+
+	<div class="grade">
+		<div>
+			<strong>Produtor:</strong><br>
+			{{.Reuniao.Produtor}}
+		</div>
+		<div>
+			<strong>Município/UF:</strong><br>
+			{{.Reuniao.Municipio}}/{{.Reuniao.UF}}
+		</div>
+		<div>
+			<strong>CAR atual:</strong><br>
+			{{.CAR}}
+		</div>
+	</div>
+
+	{{if .Erro}}
+		<div class="alerta perigo">{{.Erro}}</div>
+	{{end}}
+
+	{{if .Sucesso}}
+		<div class="alerta sucesso">
+			Fluxo automático concluído com sucesso.
+		</div>
+	{{end}}
+
+	<form method="post" class="formulario">
+		<label>Número do CAR</label>
+		<input type="text" name="car" value="{{.CAR}}" placeholder="Ex: MG-0000000-...">
+
+		<div class="barra-acoes">
+			<button class="botao" type="submit">
+				Executar tudo automaticamente
+			</button>
+
+			<a class="botao secundario" href="{{.LinkGeoref}}">Voltar ao georreferenciamento</a>
+			<a class="botao secundario" href="{{.LinkMapa}}">Ver mapa</a>
+			<a class="botao secundario" href="/investigacao?id={{.Reuniao.ID}}">Investigação</a>
+		</div>
+	</form>
+</section>
+
+{{if .Executou}}
+<section class="card">
+	<h3>Resultado da atualização</h3>
+
+	{{if .Mensagens}}
+		<ul>
+			{{range .Mensagens}}
+				<li>{{.}}</li>
+			{{end}}
+		</ul>
+	{{end}}
+
+	<div class="barra-acoes">
+		<a class="botao" href="{{.LinkMapa}}">Abrir mapa</a>
+		<a class="botao secundario" href="{{.LinkGeoref}}">Abrir georreferenciamento</a>
+		<a class="botao secundario" href="/investigacao?id={{.Reuniao.ID}}">Abrir investigação</a>
+	</div>
 </section>
 {{end}}
 `

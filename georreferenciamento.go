@@ -360,7 +360,26 @@ const georreferenciamentoHTML = `
 
 <div class="grid">
 	<div class="card">
-		<h3>Importar localização da área</h3>
+		
+<section class="card">
+	<h3>CAR e InfoSimples</h3>
+
+	<p class="pequeno">
+		Use estes atalhos para consultar o CAR, baixar o shapefile oficial pela InfoSimples
+		e enviar a geometria para o mapa desta reunião.
+	</p>
+
+	<div class="barra-acoes">
+		<a class="botao" href="/infosimples-car-imovel?id={{.Reuniao.ID}}">Consultar CAR Imóvel</a>
+		<a class="botao" href="/infosimples-automatico?id={{.Reuniao.ID}}">Atualizar tudo automaticamente</a>
+		<a class="botao" href="/infosimples-car-shapefile?id={{.Reuniao.ID}}">Baixar Shapefile pelo CAR</a>
+		<a class="botao secundario" href="/infosimples-car?id={{.Reuniao.ID}}">Demonstrativo CAR</a>
+		<a class="botao secundario" href="/infosimples-car-pdf?id={{.Reuniao.ID}}">PDF do CAR</a>
+		<a class="botao secundario" href="/mapa-georef?id={{.Reuniao.ID}}">Ver mapa</a>
+	</div>
+</section>
+
+<h3>Importar localização da área</h3>
 		<p class="pequeno">
 			Anexe KML, KMZ, GeoJSON, shapefile, croqui, planta, PDF ou ZIP.
 			O sistema guarda tudo dentro da pasta da reunião.

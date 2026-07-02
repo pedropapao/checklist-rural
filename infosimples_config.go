@@ -10,12 +10,14 @@ import (
 const urlPadraoInfoSimplesCARDemonstrativo = "https://api.infosimples.com/api/v2/consultas/car/demonstrativo"
 const urlPadraoInfoSimplesCARDemonstrativoPDF = "https://api.infosimples.com/api/v2/consultas/car/demonstrativo-pdf"
 const urlPadraoInfoSimplesCARDownloadShapefile = "https://api.infosimples.com/api/v2/consultas/car/download-shapefile"
+const urlPadraoInfoSimplesCARImovel = "https://api.infosimples.com/api/v2/consultas/car/imovel"
 
 type ConfigInfoSimples struct {
 	Token                   string
 	CARDemonstrativoURL     string
 	CARDemonstrativoPDFURL  string
 	CARDownloadShapefileURL string
+	CARImovelURL            string
 }
 
 func caminhoConfigInfoSimples() (string, error) {
@@ -37,6 +39,7 @@ func lerConfigInfoSimples() ConfigInfoSimples {
 		CARDemonstrativoURL:     urlPadraoInfoSimplesCARDemonstrativo,
 		CARDemonstrativoPDFURL:  urlPadraoInfoSimplesCARDemonstrativoPDF,
 		CARDownloadShapefileURL: urlPadraoInfoSimplesCARDownloadShapefile,
+		CARImovelURL:            urlPadraoInfoSimplesCARImovel,
 	}
 
 	caminho, err := caminhoConfigInfoSimples()
@@ -74,6 +77,8 @@ func lerConfigInfoSimples() ConfigInfoSimples {
 			c.CARDemonstrativoPDFURL = valor
 		case "INFOSIMPLES_CAR_DOWNLOAD_SHAPEFILE_URL":
 			c.CARDownloadShapefileURL = valor
+		case "INFOSIMPLES_CAR_IMOVEL_URL":
+			c.CARImovelURL = valor
 		}
 	}
 
@@ -89,12 +94,20 @@ func lerConfigInfoSimples() ConfigInfoSimples {
 		c.CARDownloadShapefileURL = urlPadraoInfoSimplesCARDownloadShapefile
 	}
 
+	if strings.TrimSpace(c.CARImovelURL) == "" {
+		c.CARImovelURL = urlPadraoInfoSimplesCARImovel
+	}
+
 	if strings.TrimSpace(c.CARDemonstrativoPDFURL) == "" {
 		c.CARDemonstrativoPDFURL = urlPadraoInfoSimplesCARDemonstrativoPDF
 	}
 
 	if strings.TrimSpace(c.CARDownloadShapefileURL) == "" {
 		c.CARDownloadShapefileURL = urlPadraoInfoSimplesCARDownloadShapefile
+	}
+
+	if strings.TrimSpace(c.CARImovelURL) == "" {
+		c.CARImovelURL = urlPadraoInfoSimplesCARImovel
 	}
 
 	return c
@@ -118,6 +131,7 @@ func salvarConfigInfoSimples(c ConfigInfoSimples) error {
 		"INFOSIMPLES_CAR_DEMONSTRATIVO_URL=" + strings.TrimSpace(c.CARDemonstrativoURL),
 		"INFOSIMPLES_CAR_DEMONSTRATIVO_PDF_URL=" + strings.TrimSpace(c.CARDemonstrativoPDFURL),
 		"INFOSIMPLES_CAR_DOWNLOAD_SHAPEFILE_URL=" + strings.TrimSpace(c.CARDownloadShapefileURL),
+		"INFOSIMPLES_CAR_IMOVEL_URL=" + strings.TrimSpace(c.CARImovelURL),
 		"",
 	}
 
