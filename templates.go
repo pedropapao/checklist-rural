@@ -830,6 +830,27 @@ const novaReuniaoHTML = `
 		<a class="botao secundario" href="/reunioes">Cancelar</a>
 	</div>
 </form>
+<script>
+(function preencherNovaReuniaoPorURL() {
+	const params = new URLSearchParams(window.location.search);
+	const produtor = params.get("produtor");
+	const observacoes = params.get("observacoes");
+
+	if (produtor) {
+		const campoProdutor = document.querySelector("input[name="produtor"]");
+		if (campoProdutor && !campoProdutor.value) {
+			campoProdutor.value = produtor;
+		}
+	}
+
+	if (observacoes) {
+		const campoObs = document.querySelector("textarea[name="observacoes"]");
+		if (campoObs && !campoObs.value) {
+			campoObs.value = observacoes;
+		}
+	}
+})();
+</script>
 `
 
 const reunioesHTML = `
